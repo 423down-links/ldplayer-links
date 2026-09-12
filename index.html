@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雷电模拟器最新版下载 - LDPlayer Latest Downloads</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    color: #e1e4e8;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  h1 {
+    font-size: 2rem;
+    background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    color: #8b949e;
+    font-size: 0.95rem;
+  }
+  .updated-badge {
+    display: inline-block;
+    background: rgba(0, 212, 255, 0.15);
+    color: #00d4ff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-top: 14px;
+    border: 1px solid rgba(0, 212, 255, 0.3);
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+  }
+  .card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 28px;
+    backdrop-filter: blur(10px);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.15);
+  }
+  .product-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .product-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .icon-9 {
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+  }
+  .icon-14 {
+    background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+  }
+  .product-name {
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+  .product-name-en {
+    font-size: 0.8rem;
+    color: #8b949e;
+  }
+  .version-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .version-label {
+    color: #8b949e;
+    font-size: 0.85rem;
+  }
+  .version-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #00d4ff;
+    font-family: 'SF Mono', Consolas, monospace;
+  }
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .info-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .info-label {
+    font-size: 0.7rem;
+    color: #6e7681;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .info-value {
+    font-size: 0.85rem;
+    color: #c9d1d9;
+    word-break: break-all;
+  }
+  .download-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+    color: #fff;
+    padding: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 8px;
+  }
+  .download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 212, 255, 0.4);
+  }
+  .direct-link {
+    display: block;
+    text-align: center;
+    color: #8b949e;
+    font-size: 0.75rem;
+    margin-top: 10px;
+    text-decoration: none;
+    word-break: break-all;
+  }
+  .direct-link:hover {
+    color: #00d4ff;
+  }
+  footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: #6e7681;
+    font-size: 0.8rem;
+  }
+  footer a {
+    color: #00d4ff;
+    text-decoration: none;
+  }
+  .note {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-size: 0.85rem;
+    color: #ffc107;
+  }
+  @media (max-width: 600px) {
+    .cards { grid-template-columns: 1fr; }
+    h1 { font-size: 1.5rem; }
+    .container { padding: 24px 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>雷电模拟器最新版下载</h1>
+    <p class="subtitle">LDPlayer Latest Version Downloads - 自动检测更新</p>
+    <div class="updated-badge" id="updatedBadge">检测中...</div>
+  </header>
+
+  <div class="note">
+    说明：版本号自动检测更新，每日北京时间8:00自动扫描官方CDN。下载链接为官方CDN直链，支持IDM等下载工具。如遇403请复制直链到下载工具。
+  </div>
+
+  <div class="cards" id="cards">
+    <div class="card"><p style="text-align:center;color:#8b949e;padding:30px;">加载中...</p></div>
+  </div>
+
+  <footer>
+    <p>数据来源：<a href="https://www.ldmnq.com/" target="_blank">ldmnq.com</a> 官方CDN自动检测</p>
+    <p style="margin-top:6px;">GitHub Actions 每日自动更新 | 最后更新：<span id="lastUpdated">-</span></p>
+  </footer>
+</div>
+
+<script>
+const EMBEDDED_DATA = {"updated_at": "2026-09-12T11:30:27.466086+00:00", "products": [{"name": "LDPlayer 9", "name_cn": "雷电模拟器9", "version": "9.5.37", "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe", "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789212624899&n=ldinst_9.5.37_ld_407594_ld.exe", "size": 601984488, "size_mb": 574.1, "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT", "channel": "407594"}, {"name": "LDPlayer 14", "name_cn": "雷电模拟器14", "version": "14.0.27", "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe", "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789212626465&n=ldinst_14.0.27_ld_412570_ld.exe", "size": 744133096, "size_mb": 709.7, "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT", "channel": "412570"}]};
+
+let data = EMBEDDED_DATA;
+
+function render() {
+  const cards = document.getElementById('cards');
+  let html = '';
+
+  data.products.forEach((p, idx) => {
+    const iconClass = idx === 0 ? 'icon-9' : 'icon-14';
+    const iconText = idx === 0 ? '9' : '14';
+    const dateStr = p.last_modified ? new Date(p.last_modified).toLocaleDateString('zh-CN') : '-';
+
+    html += '<div class="card">';
+    html += '<div class="product-header">';
+    html += '<div class="product-icon ' + iconClass + '">' + iconText + '</div>';
+    html += '<div>';
+    html += '<div class="product-name">' + p.name_cn + '</div>';
+    html += '<div class="product-name-en">' + p.name + '</div>';
+    html += '</div></div>';
+    html += '<div class="version-row">';
+    html += '<span class="version-label">最新版本</span>';
+    html += '<span class="version-value">v' + p.version + '</span>';
+    html += '</div>';
+    html += '<div class="info-grid">';
+    html += '<div class="info-item"><div class="info-label">文件大小</div><div class="info-value">' + p.size_mb + ' MB</div></div>';
+    html += '<div class="info-item"><div class="info-label">发布日期</div><div class="info-value">' + dateStr + '</div></div>';
+    html += '</div>';
+    html += '<a href="' + p.download_url + '" class="download-btn" target="_blank">立即下载 v' + p.version + '</a>';
+    html += '<a href="' + p.download_url + '" class="direct-link" target="_blank">' + p.download_url + '</a>';
+    html += '</div>';
+  });
+
+  cards.innerHTML = html;
+  document.getElementById('updatedBadge').textContent = '版本自动检测中';
+  document.getElementById('lastUpdated').textContent = new Date(data.updated_at).toLocaleString('zh-CN');
+}
+
+async function loadData() {
+  try {
+    const resp = await fetch('data.json?t=' + Date.now());
+    if (resp.ok) {
+      data = await resp.json();
+    }
+  } catch (e) {}
+  render();
+}
+
+loadData();
+</script>
+</body>
+</html>
