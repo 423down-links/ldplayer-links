@@ -1,0 +1,27 @@
+{
+  "updated_at": "2026-09-12T11:30:27.466086+00:00",
+  "products": [
+    {
+      "name": "LDPlayer 9",
+      "name_cn": "雷电模拟器9",
+      "version": "9.5.37",
+      "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789212624899&n=ldinst_9.5.37_ld_407594_ld.exe",
+      "size": 601984488,
+      "size_mb": 574.1,
+      "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT",
+      "channel": "407594"
+    },
+    {
+      "name": "LDPlayer 14",
+      "name_cn": "雷电模拟器14",
+      "version": "14.0.27",
+      "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789212626465&n=ldinst_14.0.27_ld_412570_ld.exe",
+      "size": 744133096,
+      "size_mb": 709.7,
+      "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT",
+      "channel": "412570"
+    }
+  ]
+}
