@@ -202,9 +202,12 @@ PRODUCTS = [
         'icon': '网',
         'icon_color': 'linear-gradient(135deg, #e60026, #ff4d4f)',
         'category': '影音娱乐',
-        'detect_type': 'fixed',
-        'version': '3.1.34.205281',
-        'download_url': 'https://music.163.com/#/download',
+        'detect_type': 'increment',
+        'base_version': '3.1.40.205461',
+        'url_pattern': 'https://d8.music.126.net/dmusic2/NeteaseCloudMusic_Music_official_{ver}_64.exe',
+        'param_format': '',
+        'channel': '',
+        'referer': 'https://music.163.com/',
         'official_site': 'https://music.163.com/#/download',
     },
     {
@@ -252,7 +255,10 @@ PRODUCTS = [
         'icon': 'P',
         'icon_color': 'linear-gradient(135deg, #ff6b35, #f7931e)',
         'category': '图像处理',
-        'detect_type': 'fixed',
+        'detect_type': 'scrape',
+        'check_url': 'https://community.topazlabs.com/c/topaz-photo/topaz-photo-releases/117',
+        'version_regex': r'(\d+\.\d+\.\d+)',
+        'date_regex': r'([A-Z][a-z]+ \d+, 20\d{2})',
         'version': '1.7.0',
         'download_url': 'https://downloads.topazlabs.com/deploy/TopazPhoto/1.7.0/TopazPhoto-1.7.0.msi',
         'official_site': 'https://community.topazlabs.com/c/topaz-photo/topaz-photo-releases/117',
@@ -263,7 +269,10 @@ PRODUCTS = [
         'icon': 'G',
         'icon_color': 'linear-gradient(135deg, #7b2ff7, #a855f7)',
         'category': '图像处理',
-        'detect_type': 'fixed',
+        'detect_type': 'scrape',
+        'check_url': 'https://community.topazlabs.com/c/topaz-gigapixel/topaz-gigapixel-releases/128',
+        'version_regex': r'(\d+\.\d+\.\d+)',
+        'date_regex': r'([A-Z][a-z]+ \d+, 20\d{2})',
         'version': '1.3.6',
         'download_url': 'https://downloads.topazlabs.com/deploy/TopazGigapixel/1.3.6/TopazGigapixel-1.3.6.msi',
         'official_site': 'https://community.topazlabs.com/c/topaz-gigapixel/topaz-gigapixel-releases/128',
@@ -274,7 +283,10 @@ PRODUCTS = [
         'icon': 'V',
         'icon_color': 'linear-gradient(135deg, #ef4444, #f97316)',
         'category': '视频处理',
-        'detect_type': 'fixed',
+        'detect_type': 'scrape',
+        'check_url': 'https://community.topazlabs.com/c/topaz-video/topaz-video-releases/122',
+        'version_regex': r'(\d+\.\d+\.\d+)',
+        'date_regex': r'([A-Z][a-z]+ \d+, 20\d{2})',
         'version': '1.7.0',
         'download_url': 'https://downloads.topazlabs.com/deploy/TopazVideoStudio/1.7.0/TopazVideo-1.7.0.msi',
         'official_site': 'https://community.topazlabs.com/c/topaz-video/topaz-video-releases/122',
@@ -285,8 +297,10 @@ PRODUCTS = [
         'icon': 'F',
         'icon_color': 'linear-gradient(135deg, #f0282f, #ff6b6b)',
         'category': '运行环境',
-        'detect_type': 'fixed',
-        'version': '见详情页',
+        'detect_type': 'scrape',
+        'check_url': 'https://flash-player-links.pages.dev/',
+        'version_regex': r'"version":\s*"([^"]+)"',
+        'version': '34.0.0.384',
         'download_url': 'https://flash-player-links.pages.dev/',
         'official_site': 'https://flash-player-links.pages.dev/',
     },
@@ -311,12 +325,15 @@ _no_redirect_opener = urllib.request.build_opener(NoRedirect)
 _capture_redirect_opener = urllib.request.build_opener(CaptureRedirect)
 
 
-def check_url(url):
+def check_url(url, referer=None):
     """检测URL是否存在，返回 (exists, size, last_modified)
     不跟随重定向：302/301（如CDN跳转404页）视为文件不存在
     """
+    headers = {'User-Agent': UA}
+    if referer:
+        headers['Referer'] = referer
     try:
-        req = urllib.request.Request(url, method='HEAD', headers={'User-Agent': UA})
+        req = urllib.request.Request(url, method='HEAD', headers=headers)
         with _no_redirect_opener.open(req, timeout=10) as resp:
             size = resp.headers.get('Content-Length', '0')
             last_modified = resp.headers.get('Last-Modified', '')
@@ -327,18 +344,20 @@ def check_url(url):
         return False, 0, ''
 
 
-def check_url_follow(url):
+def check_url_follow(url, referer=None):
     """检测URL（跟随重定向），返回 (exists, size, last_modified)
     用于fixed模式，因为有些固定地址会302到CDN
     """
+    headers = {'User-Agent': UA}
+    if referer:
+        headers['Referer'] = referer
     try:
-        req = urllib.request.Request(url, method='HEAD', headers={'User-Agent': UA})
+        req = urllib.request.Request(url, method='HEAD', headers=headers)
         with urllib.request.urlopen(req, timeout=15) as resp:
             size = resp.headers.get('Content-Length', '0')
             last_modified = resp.headers.get('Last-Modified', '')
             return resp.status == 200, int(size), last_modified
     except urllib.error.HTTPError as e:
-        # 403 防盗链：文件存在但被拦截，视为可用但大小未知
         if e.code == 403:
             return True, 0, ''
         size = e.headers.get('Content-Length', '0') if e.headers else '0'
@@ -360,6 +379,24 @@ def get_redirect_location(url):
         return None, 0
 
 
+def parse_date(date_str):
+    """解析多种日期格式为 YYYY-MM-DD"""
+    date_str = date_str.strip()
+    # 英文月份: September 9, 2026
+    months = {'january':'01','february':'02','march':'03','april':'04','may':'05','june':'06',
+              'july':'07','august':'08','september':'09','october':'10','november':'11','december':'12',
+              'jan':'01','feb':'02','mar':'03','apr':'04','jun':'06','jul':'07','aug':'08','sep':'09','oct':'10','nov':'11','dec':'12'}
+    m = re.match(r'([A-Za-z]+)\s+(\d{1,2}),?\s*(20\d{2})', date_str)
+    if m:
+        mon = months.get(m.group(1).lower(), '01')
+        return f"{m.group(3)}-{mon}-{m.group(2).zfill(2)}"
+    # 中文格式: 2026年09月09日
+    date_str = date_str.replace('年', '-').replace('月', '-').replace('日', '')
+    # 斜杠格式
+    date_str = date_str.replace('/', '-')
+    return date_str
+
+
 def increment_version(version):
     """递增版本号的最后一段，支持任意段数"""
     parts = version.split('.')
@@ -373,10 +410,11 @@ def detect_increment(product):
     latest = current
     latest_size = 0
     latest_date = ''
+    referer = product.get('referer')
 
     # 先确认 base_version 存在
     url = product['url_pattern'].format(ver=current)
-    exists, size, date = check_url(url)
+    exists, size, date = check_url(url, referer=referer)
     if exists:
         latest_size = size
         latest_date = date
@@ -387,7 +425,7 @@ def detect_increment(product):
     for _ in range(MAX_INCREMENT):
         next_ver = increment_version(current)
         url = product['url_pattern'].format(ver=next_ver)
-        exists, size, date = check_url(url)
+        exists, size, date = check_url(url, referer=referer)
         if exists:
             latest = next_ver
             latest_size = size
@@ -515,14 +553,16 @@ def detect_scrape(product):
                     scraped_version = groups[0]
                 print(f"  官网版本: {scraped_version} (参考)")
 
-        # 抓取发布日期
+        # 抓取发布日期（取所有匹配中最新的一个）
         date_regex = product.get('date_regex')
         if date_regex:
-            m = re.search(date_regex, html, re.I)
-            if m:
-                scraped_date = m.group(1)
-                scraped_date = scraped_date.replace('/', '-').replace('年', '-').replace('月', '-').replace('日', '')
-                print(f"  发布日期: {scraped_date}")
+            matches = re.findall(date_regex, html, re.I)
+            if matches:
+                parsed_dates = [parse_date(d) for d in matches]
+                parsed_dates = [d for d in parsed_dates if re.match(r'20\d{2}-\d{2}-\d{2}', d)]
+                if parsed_dates:
+                    scraped_date = max(parsed_dates)
+                    print(f"  发布日期: {scraped_date}")
 
         # 抓取下载链接
         dl_regex = product.get('download_url_regex')
