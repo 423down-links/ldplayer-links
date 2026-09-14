@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T11:29:51.483594+00:00",
+  "updated_at": "2026-09-14T17:45:59.535857+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.37",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789385169043&n=ldinst_9.5.37_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789407680861&n=ldinst_9.5.37_ld_407594_ld.exe",
       "size": 601984488,
       "size_mb": 574.1,
       "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.27",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789385170797&n=ldinst_14.0.27_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789407682077&n=ldinst_14.0.27_ld_412570_ld.exe",
       "size": 744133096,
       "size_mb": 709.7,
       "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT",
@@ -160,10 +160,10 @@
       "version": "28.30.2600",
       "download_url": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip",
       "download_url_with_params": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip",
-      "size": 14470348,
+      "size": 14496843,
       "size_mb": 13.8,
-      "last_modified": "2026-09-13",
-      "md5": "",
+      "last_modified": "Sun, 13 Sep 2026 18:56:32 GMT",
+      "md5": "8f6bf2be3b20314dc4ce24f2616ea42c",
       "official_site": "https://www.xyplorer.com/"
     },
     {
@@ -342,7 +342,7 @@
       "download_url_with_params": "https://www.ntwind.com/files/WinSnap_6.3.2-setup.exe",
       "size": 3884480,
       "size_mb": 3.7,
-      "last_modified": "2026-09-14",
+      "last_modified": "",
       "md5": "",
       "official_site": "https://www.ntwind.com/blog"
     }
