@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>常用软件最新版检测 - Software Official Links</title>
+<title>Soft Official Package Version Check Links</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -164,21 +164,15 @@
 <body>
 <div class="container">
   <header>
-    <h1>常用软件最新版检测</h1>
-    <p class="subtitle">Software Official Links - 自动检测官方CDN最新版本</p>
-    <div class="updated-badge" id="updatedBadge">检测中...</div>
+    <p class="subtitle">Soft Official Package Version Check Links</p>
   </header>
-
-  <div class="note">
-    每6小时自动扫描官方CDN。下载链接为官方直链（带防盗链参数）。如遇403请复制直链到下载工具。
-  </div>
 
   <div id="content">
     <div style="text-align:center;color:#8b949e;padding:20px;">加载中...</div>
   </div>
 
   <footer>
-    <p>数据来源：各软件官方CDN自动检测 | GitHub Actions 每6小时自动更新 | 最后更新：<span id="lastUpdated">-</span></p>
+    <p>数据来源：各软件官方CDN或API接口 | 每6小时自动检测，下载链接为官方直链(带防盗链参数) | 最后更新：<span id="lastUpdated">-</span> | 423down.com</p>
   </footer>
 </div>
 
@@ -224,7 +218,6 @@ function render() {
   html += '</tbody></table>';
 
   content.innerHTML = html;
-  document.getElementById('updatedBadge').textContent = '共 ' + data.products.length + ' 款软件';
   document.getElementById('lastUpdated').textContent = new Date(data.updated_at).toLocaleString('zh-CN');
 }
 
