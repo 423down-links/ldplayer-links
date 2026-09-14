@@ -72,6 +72,7 @@ PRODUCTS = [
         'category': '社交沟通',
         'detect_type': 'increment',
         'base_version': '4.1.13',
+        'version_display': '4.1.13.65',
         'url_pattern': 'https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_{ver}.exe',
         'param_format': '',
         'channel': '',
@@ -109,8 +110,11 @@ PRODUCTS = [
         'icon': 'Q',
         'icon_color': 'linear-gradient(135deg, #31c27c, #1db954)',
         'category': '影音娱乐',
-        'detect_type': 'fixed',
-        'version': '20.8.5.8',
+        'detect_type': 'scrape',
+        'check_url': 'https://y.qq.com/download/download.html',
+        'version_regex': r'最新版:(\d+\.\d+\.\d+)',
+        'date_regex': r'发布时间[：:]\s*(\d{4}-\d{2}-\d{2})',
+        'version': '22.6.1',
         'download_url': 'https://y.qq.com/download/download.html',
         'official_site': 'https://y.qq.com/download/download.html',
     },
@@ -120,7 +124,10 @@ PRODUCTS = [
         'icon': 'X',
         'icon_color': 'linear-gradient(135deg, #667eea, #764ba2)',
         'category': '开发工具',
-        'detect_type': 'fixed',
+        'detect_type': 'scrape',
+        'check_url': 'https://www.xshell.com/zh/xshell-update-history/',
+        'version_regex': r'Xshell\s*(\d+)\s*Build\s*(\d+)',
+        'date_regex': r'(\d{4}[-/]\d{1,2}[-/]\d{1,2})',
         'version': '8.0.0110',
         'download_url': 'https://www.xshell.com/zh/xshell-update-history/',
         'official_site': 'https://www.xshell.com/zh/xshell-update-history/',
@@ -336,27 +343,49 @@ def get_file_md5(url, max_retries=3):
 
 
 def detect_scrape(product):
-    """抓取模式：固定下载地址，计算MD5，版本号优先使用配置默认值
-    官网页面版本号仅作参考（部分官网更新滞后或无详细版本号）
+    """抓取模式：从官网页面抓取版本号和发布日期
+    下载地址为网页时不计算MD5；为文件时计算MD5
+    版本号优先使用配置默认值，官网抓取仅作参考
     """
     default_version = product.get('version', '未知')
-
-    # 从官网抓取版本号作为参考
     scraped_version = None
+    scraped_date = None
+
+    # 从官网抓取版本号和发布日期
     try:
         req = urllib.request.Request(product['check_url'], headers={'User-Agent': UA})
-        with urllib.request.urlopen(req, timeout=15) as resp:
+        with urllib.request.urlopen(req, timeout=20) as resp:
             html = resp.read().decode('utf-8', errors='ignore')
-        regex = product.get('version_regex', r'(\d+\.\d+(?:\.\d+){0,3})')
-        m = re.search(regex, html, re.I)
-        if m:
-            scraped_version = m.group(1)
-            print(f"  官网版本: {scraped_version} (参考)")
+
+        # 抓取版本号（支持多捕获组，用.连接）
+        regex = product.get('version_regex')
+        if regex:
+            m = re.search(regex, html, re.I)
+            if m:
+                groups = [g for g in m.groups() if g]
+                if len(groups) > 1:
+                    # Xshell 格式: 主版本.Build号 → 主版本.0.Build号
+                    if 'Build' in regex or 'build' in regex:
+                        scraped_version = f"{groups[0]}.0.{groups[1]}"
+                    else:
+                        scraped_version = '.'.join(groups)
+                else:
+                    scraped_version = groups[0]
+                print(f"  官网版本: {scraped_version} (参考)")
+
+        # 抓取发布日期
+        date_regex = product.get('date_regex')
+        if date_regex:
+            m = re.search(date_regex, html, re.I)
+            if m:
+                scraped_date = m.group(1)
+                # 统一日期格式为 YYYY-MM-DD
+                scraped_date = scraped_date.replace('/', '-').replace('年', '-').replace('月', '-').replace('日', '')
+                print(f"  发布日期: {scraped_date}")
     except Exception as e:
         print(f"  ⚠️ 官网抓取失败: {e}")
 
     # 版本号决策：优先使用配置的默认版本号
-    # 如果官网抓取到版本号且未配置默认值，则使用抓取值
     if default_version and default_version != '未知':
         version = default_version
         if scraped_version and scraped_version not in default_version:
@@ -366,16 +395,31 @@ def detect_scrape(product):
     else:
         version = default_version
 
-    # 获取文件信息
+    # 获取文件信息（仅当下载地址是文件时）
     url = product['download_url']
-    exists, size, date = check_url_follow(url)
-    if not exists and size == 0:
-        print(f"  ⚠️ 下载地址不可用")
+    is_webpage = url.endswith('.html') or url.endswith('/') or 'download.html' in url or 'update-history' in url
+    size = 0
+    date = ''
+    md5 = ''
 
-    # 计算MD5
-    md5 = get_file_md5(url) if exists else ''
-    if md5:
-        print(f"  MD5: {md5}")
+    if is_webpage:
+        # 下载地址是网页，使用抓取的发布日期
+        date = scraped_date or ''
+        print(f"  下载地址为网页，大小不适用")
+    else:
+        # 下载地址是文件，获取大小和修改时间
+        exists, size, date = check_url_follow(url)
+        if not exists and size == 0:
+            print(f"  ⚠️ 下载地址不可用")
+        # 计算MD5
+        if exists:
+            md5 = get_file_md5(url)
+            if md5:
+                print(f"  MD5: {md5}")
+
+    # 如果有抓取的发布日期且文件没有 Last-Modified，使用抓取的日期
+    if scraped_date and not date:
+        date = scraped_date
 
     return version, url, url, size, date, md5
 
@@ -393,13 +437,16 @@ def find_latest(product):
     else:
         version, full_url, param_url, size, date, md5 = detect_increment(product)
 
+    # 如果配置了 version_display，使用它作为显示版本号（URL中仍用检测到的版本）
+    display_version = product.get('version_display', version)
+
     return {
         'name': product['name'],
         'name_cn': product['name_cn'],
         'icon': product.get('icon', ''),
         'icon_color': product.get('icon_color', ''),
         'category': product.get('category', '其他'),
-        'version': version,
+        'version': display_version,
         'download_url': full_url,
         'download_url_with_params': param_url,
         'size': size,
