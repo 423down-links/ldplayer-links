@@ -113,8 +113,8 @@ PRODUCTS = [
         'detect_type': 'scrape',
         'check_url': 'https://y.qq.com/download/download.html',
         'version_regex': r'最新版:(\d+\.\d+\.\d+)',
-        'date_regex': r'发布时间[：:]\s*(\d{4}-\d{2}-\d{2})',
         'version': '22.6.1',
+        'date': '2026-09-02',
         'download_url': 'https://y.qq.com/download/download.html',
         'official_site': 'https://y.qq.com/download/download.html',
     },
@@ -607,6 +607,10 @@ def detect_scrape(product):
 
     if scraped_date and not date:
         date = scraped_date
+
+    # 配置的固定日期优先（当抓取不到时）
+    if not date and product.get('date'):
+        date = product['date']
 
     return version, url, url, size, date, md5
 
