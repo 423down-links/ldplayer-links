@@ -154,10 +154,43 @@
     font-size: 0.75rem;
     color: #8b949e;
   }
+  /* 移动端卡片式布局 */
   @media (max-width: 768px) {
-    .hide-mobile { display: none; }
-    table { font-size: 0.8rem; }
-    tbody td, thead th { padding: 6px 8px; }
+    .container { padding: 12px 10px; }
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tbody tr {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      padding: 10px 12px;
+    }
+    tbody td {
+      border: none;
+      padding: 3px 0;
+      font-size: 0.82rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    tbody td::before {
+      content: attr(data-label);
+      color: #8b949e;
+      font-size: 0.72rem;
+      font-weight: 600;
+      min-width: 60px;
+      flex-shrink: 0;
+    }
+    .col-software, .col-version, .col-size, .col-date, .col-download {
+      width: 100%;
+    }
+    .product-name-en { display: block; margin-left: 0; margin-top: 2px; }
+    .site-link { display: none; }
+    .download-btn { width: 100%; text-align: center; padding: 8px; }
+    .direct-link { font-size: 0.65rem; margin-top: 6px; }
+    .version { font-size: 0.9rem; }
   }
 </style>
 </head>
@@ -195,8 +228,8 @@ function render() {
   html += '<table><thead><tr>';
   html += '<th class="col-software">软件</th>';
   html += '<th class="col-version">最新版本</th>';
-  html += '<th class="hide-mobile col-size">大小</th>';
-  html += '<th class="hide-mobile col-date">发布日期</th>';
+  html += '<th class="col-size">大小</th>';
+  html += '<th class="col-date">发布日期</th>';
   html += '<th class="col-download">下载</th>';
   html += '</tr></thead><tbody>';
 
@@ -204,13 +237,14 @@ function render() {
     const dateStr = p.last_modified ? new Date(p.last_modified).toLocaleDateString('zh-CN') : '-';
     const dlUrl = p.download_url_with_params || p.download_url;
     const siteLink = p.official_site ? '<a href="' + p.official_site + '" class="site-link" target="_blank">' + p.official_site.replace('https://','').replace('/','') + '</a>' : '';
+    const sizeStr = p.size_mb ? p.size_mb + ' MB' : '-';
 
     html += '<tr>';
-    html += '<td><span class="product-name">' + p.name_cn + '</span><span class="product-name-en">' + p.name + '</span><br>' + siteLink + '</td>';
-    html += '<td><span class="version">v' + p.version + '</span></td>';
-    html += '<td class="size hide-mobile">' + p.size_mb + ' MB</td>';
-    html += '<td class="date hide-mobile">' + dateStr + '</td>';
-    html += '<td><a href="' + dlUrl + '" class="download-btn" target="_blank">下载</a>';
+    html += '<td class="col-software" data-label="软件"><span class="product-name">' + p.name_cn + '</span><span class="product-name-en">' + p.name + '</span><br>' + siteLink + '</td>';
+    html += '<td class="col-version" data-label="版本"><span class="version">v' + p.version + '</span></td>';
+    html += '<td class="col-size size" data-label="大小">' + sizeStr + '</td>';
+    html += '<td class="col-date date" data-label="日期">' + dateStr + '</td>';
+    html += '<td class="col-download" data-label="下载"><a href="' + dlUrl + '" class="download-btn" target="_blank">立即下载</a>';
     html += '<a href="' + dlUrl + '" class="direct-link" target="_blank">' + dlUrl + '</a></td>';
     html += '</tr>';
   });
