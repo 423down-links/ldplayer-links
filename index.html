@@ -206,7 +206,7 @@
   </header>
 
   <div class="note">
-    说明：版本号自动检测更新，每日北京时间8:00自动扫描官方CDN。下载链接为官方CDN直链，支持IDM等下载工具。如遇403请复制直链到下载工具。
+    说明：版本号自动检测更新，每6小时自动扫描官方CDN。下载链接为官方CDN直链（带防盗链参数），支持IDM等下载工具。如遇403请复制直链到下载工具。
   </div>
 
   <div id="content">
@@ -214,13 +214,13 @@
   </div>
 
   <footer>
-    <p>数据来源：各软件官方CDN自动检测 | GitHub Actions 每日自动更新</p>
+    <p>数据来源：各软件官方CDN自动检测 | GitHub Actions 每6小时自动更新</p>
     <p style="margin-top:6px;">最后更新：<span id="lastUpdated">-</span></p>
   </footer>
 </div>
 
 <script>
-const EMBEDDED_DATA = {"updated_at": "2026-09-14T05:51:44.206369+00:00", "products": [{"name": "LDPlayer 9", "name_cn": "雷电模拟器 9", "icon": "9", "icon_color": "linear-gradient(135deg, #ff6b35, #f7931e)", "category": "模拟器", "version": "9.5.37", "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe", "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789365099522&n=ldinst_9.5.37_ld_407594_ld.exe", "size": 601984488, "size_mb": 574.1, "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT", "official_site": "https://www.ldmnq.com/"}, {"name": "LDPlayer 14", "name_cn": "雷电模拟器 14", "icon": "14", "icon_color": "linear-gradient(135deg, #00d4ff, #7b2ff7)", "category": "模拟器", "version": "14.0.27", "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe", "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789365101243&n=ldinst_14.0.27_ld_412570_ld.exe", "size": 744133096, "size_mb": 709.7, "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT", "official_site": "https://www.ldmnq.com/"}, {"name": "Thunder", "name_cn": "迅雷", "icon": "迅", "icon_color": "linear-gradient(135deg, #1e88e5, #00acc1)", "category": "下载工具", "version": "25.1.13.1631", "download_url": "https://down.sandai.net/thunder_pc/ThunderSetup25.1.13.1631up.exe", "download_url_with_params": "https://down.sandai.net/thunder_pc/ThunderSetup25.1.13.1631up.exe", "size": 212189536, "size_mb": 202.4, "last_modified": "Fri, 04 Sep 2026 05:33:06 GMT", "official_site": "https://www.xunlei.com/"}]};
+const EMBEDDED_DATA = {"updated_at": "2026-09-14T06:00:29.644765+00:00", "products": [{"name": "LDPlayer 9", "name_cn": "雷电模拟器 9", "icon": "9", "icon_color": "linear-gradient(135deg, #ff6b35, #f7931e)", "category": "模拟器", "version": "9.5.37", "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe", "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789365625142&n=ldinst_9.5.37_ld_407594_ld.exe", "size": 601984488, "size_mb": 574.1, "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT", "official_site": "https://www.ldmnq.com/"}, {"name": "LDPlayer 14", "name_cn": "雷电模拟器 14", "icon": "14", "icon_color": "linear-gradient(135deg, #00d4ff, #7b2ff7)", "category": "模拟器", "version": "14.0.27", "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe", "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789365626950&n=ldinst_14.0.27_ld_412570_ld.exe", "size": 744133096, "size_mb": 709.7, "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT", "official_site": "https://www.ldmnq.com/"}, {"name": "Thunder", "name_cn": "迅雷", "icon": "迅", "icon_color": "linear-gradient(135deg, #1e88e5, #00acc1)", "category": "下载工具", "version": "25.1.13.1631", "download_url": "https://down.sandai.net/thunder_pc/ThunderSetup25.1.13.1631up.exe", "download_url_with_params": "https://down.sandai.net/thunder_pc/ThunderSetup25.1.13.1631up.exe", "size": 212189536, "size_mb": 202.4, "last_modified": "Fri, 04 Sep 2026 05:33:06 GMT", "official_site": "https://www.xunlei.com/"}]};
 
 let data = EMBEDDED_DATA;
 
@@ -261,8 +261,9 @@ function render() {
       html += '<div class="info-item"><div class="info-label">文件大小</div><div class="info-value">' + p.size_mb + ' MB</div></div>';
       html += '<div class="info-item"><div class="info-label">发布日期</div><div class="info-value">' + dateStr + '</div></div>';
       html += '</div>';
-      html += '<a href="' + p.download_url + '" class="download-btn" target="_blank">立即下载 v' + p.version + '</a>';
-      html += '<a href="' + p.download_url + '" class="direct-link" target="_blank">' + p.download_url + '</a>';
+      const dlUrl = p.download_url_with_params || p.download_url;
+      html += '<a href="' + dlUrl + '" class="download-btn" target="_blank">立即下载 v' + p.version + '</a>';
+      html += '<a href="' + dlUrl + '" class="direct-link" target="_blank">' + dlUrl + '</a>';
       html += '</div>';
     });
     html += '</div></div>';

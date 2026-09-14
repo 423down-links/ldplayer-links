@@ -106,6 +106,8 @@ def find_latest(product):
     if exists:
         latest_size = size
         latest_date = date
+    else:
+        print(f"  ⚠️ 警告: 基础版本 {current} 不存在，可能已下架或网络异常")
 
     # 递增检测
     for _ in range(MAX_INCREMENT):
