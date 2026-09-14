@@ -2,12 +2,14 @@
 # -*- coding: utf-8 -*-
 """
 常用软件最新版离线安装包自动检测脚本
-支持三种检测模式：
+支持四种检测模式：
   increment - 从基础版本递增检测（默认）
   redirect  - 访问固定地址，从 302 Location 头提取版本号和完整下载链接
   fixed     - 固定下载地址，版本号手动维护，只检测文件可用性
+  scrape    - 从官网页面抓取版本号，固定下载地址，计算MD5校验
 """
 
+import hashlib
 import json
 import os
 import re
@@ -134,6 +136,30 @@ PRODUCTS = [
         'version_regex': r'Xmind-for-Windows-x64bit-(\d+\.\d+\.\d+)-',
         'official_site': 'https://xmind.cn/',
     },
+    {
+        'name': 'WinHex',
+        'name_cn': 'WinHex',
+        'icon': 'W',
+        'icon_color': 'linear-gradient(135deg, #667eea, #764ba2)',
+        'category': '开发工具',
+        'detect_type': 'scrape',
+        'check_url': 'https://www.x-ways.net/winhex/',
+        'version_regex': r'WinHex\s*(\d+\.\d+)',
+        'download_url': 'https://www.x-ways.net/winhex.zip',
+        'official_site': 'https://www.x-ways.net/winhex/',
+    },
+    {
+        'name': 'XYplorer',
+        'name_cn': 'XYplorer',
+        'icon': 'X',
+        'icon_color': 'linear-gradient(135deg, #00acc1, #1e88e5)',
+        'category': '办公效率',
+        'detect_type': 'scrape',
+        'check_url': 'https://www.xyplorer.com/',
+        'version_regex': r'version\s*\((\d+\.\d+\.\d+)',
+        'download_url': 'https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip',
+        'official_site': 'https://www.xyplorer.com/',
+    },
 ]
 
 MAX_INCREMENT = 30  # 最多递增检测30个版本
@@ -249,7 +275,7 @@ def detect_increment(product):
     else:
         param_url = full_url
 
-    return latest, full_url, param_url, latest_size, latest_date
+    return latest, full_url, param_url, latest_size, latest_date, ''
 
 
 def detect_redirect(product):
@@ -269,7 +295,7 @@ def detect_redirect(product):
     # 获取文件大小和修改时间（跟随重定向）
     exists, size, date = check_url_follow(location)
 
-    return version, location, location, size, date
+    return version, location, location, size, date, ''
 
 
 def detect_fixed(product):
@@ -279,7 +305,56 @@ def detect_fixed(product):
     if not exists and size == 0:
         print(f"  ⚠️ 警告: 固定地址不可用，可能链接已失效")
     version = product.get('version', '最新版')
-    return version, url, url, size, date
+    return version, url, url, size, date, ''
+
+
+def get_file_md5(url):
+    """下载文件并计算MD5，返回md5十六进制字符串"""
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent': UA})
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            md5 = hashlib.md5()
+            while True:
+                chunk = resp.read(65536)
+                if not chunk:
+                    break
+                md5.update(chunk)
+            return md5.hexdigest()
+    except Exception as e:
+        print(f"  ⚠️ MD5计算失败: {e}")
+        return ''
+
+
+def detect_scrape(product):
+    """抓取模式：从官网页面抓取版本号，固定下载地址，计算MD5"""
+    # 抓取版本号
+    version = product.get('version', '未知')
+    try:
+        req = urllib.request.Request(product['check_url'], headers={'User-Agent': UA})
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            html = resp.read().decode('utf-8', errors='ignore')
+        regex = product.get('version_regex', r'(\d+\.\d+(?:\.\d+){0,3})')
+        m = re.search(regex, html, re.I)
+        if m:
+            version = m.group(1)
+            print(f"  抓取到版本号: {version}")
+        else:
+            print(f"  ⚠️ 未从页面匹配到版本号，使用默认: {version}")
+    except Exception as e:
+        print(f"  ⚠️ 版本号抓取失败: {e}")
+
+    # 获取文件信息
+    url = product['download_url']
+    exists, size, date = check_url_follow(url)
+    if not exists and size == 0:
+        print(f"  ⚠️ 下载地址不可用")
+
+    # 计算MD5
+    md5 = get_file_md5(url) if exists else ''
+    if md5:
+        print(f"  MD5: {md5}")
+
+    return version, url, url, size, date, md5
 
 
 def find_latest(product):
@@ -287,11 +362,13 @@ def find_latest(product):
     detect_type = product.get('detect_type', 'increment')
 
     if detect_type == 'redirect':
-        version, full_url, param_url, size, date = detect_redirect(product)
+        version, full_url, param_url, size, date, md5 = detect_redirect(product)
     elif detect_type == 'fixed':
-        version, full_url, param_url, size, date = detect_fixed(product)
+        version, full_url, param_url, size, date, md5 = detect_fixed(product)
+    elif detect_type == 'scrape':
+        version, full_url, param_url, size, date, md5 = detect_scrape(product)
     else:
-        version, full_url, param_url, size, date = detect_increment(product)
+        version, full_url, param_url, size, date, md5 = detect_increment(product)
 
     return {
         'name': product['name'],
@@ -305,6 +382,7 @@ def find_latest(product):
         'size': size,
         'size_mb': round(size / 1024 / 1024, 1) if size else 0,
         'last_modified': date,
+        'md5': md5,
         'official_site': product.get('official_site', ''),
     }
 

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T07:14:45.384897+00:00",
+  "updated_at": "2026-09-14T07:35:39.749418+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,10 +9,11 @@
       "category": "模拟器",
       "version": "9.5.37",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789370071504&n=ldinst_9.5.37_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789371257673&n=ldinst_9.5.37_ld_407594_ld.exe",
       "size": 601984488,
       "size_mb": 574.1,
       "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT",
+      "md5": "",
       "official_site": "https://www.ldmnq.com/"
     },
     {
@@ -23,10 +24,11 @@
       "category": "模拟器",
       "version": "14.0.27",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789370073701&n=ldinst_14.0.27_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789371259682&n=ldinst_14.0.27_ld_412570_ld.exe",
       "size": 744133096,
       "size_mb": 709.7,
       "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT",
+      "md5": "",
       "official_site": "https://www.ldmnq.com/"
     },
     {
@@ -41,6 +43,7 @@
       "size": 212189536,
       "size_mb": 202.4,
       "last_modified": "Fri, 04 Sep 2026 05:33:06 GMT",
+      "md5": "",
       "official_site": "https://www.xunlei.com/"
     },
     {
@@ -55,6 +58,7 @@
       "size": 256020400,
       "size_mb": 244.2,
       "last_modified": "Wed, 09 Sep 2026 02:21:00 GMT",
+      "md5": "",
       "official_site": "https://pc.weixin.qq.com/"
     },
     {
@@ -69,6 +73,7 @@
       "size": 223581184,
       "size_mb": 213.2,
       "last_modified": "Fri, 28 Aug 2026 09:23:30 GMT",
+      "md5": "",
       "official_site": "https://pinyin.sogou.com/windows/"
     },
     {
@@ -83,6 +88,7 @@
       "size": 143174816,
       "size_mb": 136.5,
       "last_modified": "Tue, 18 Aug 2026 13:57:39 GMT",
+      "md5": "",
       "official_site": "https://www.yy.com/web/pcyy_download/"
     },
     {
@@ -97,6 +103,7 @@
       "size": 98806320,
       "size_mb": 94.2,
       "last_modified": "Wed, 12 Aug 2026 02:32:12 GMT",
+      "md5": "",
       "official_site": "https://y.qq.com/download/download.html"
     },
     {
@@ -111,6 +118,7 @@
       "size": 0,
       "size_mb": 0,
       "last_modified": "",
+      "md5": "",
       "official_site": "https://www.xshell.com/zh/xshell-update-history/"
     },
     {
@@ -125,7 +133,38 @@
       "size": 189472768,
       "size_mb": 180.7,
       "last_modified": "Wed, 09 Sep 2026 08:30:52 GMT",
+      "md5": "",
       "official_site": "https://xmind.cn/"
+    },
+    {
+      "name": "WinHex",
+      "name_cn": "WinHex",
+      "icon": "W",
+      "icon_color": "linear-gradient(135deg, #667eea, #764ba2)",
+      "category": "开发工具",
+      "version": "21.8",
+      "download_url": "https://www.x-ways.net/winhex.zip",
+      "download_url_with_params": "https://www.x-ways.net/winhex.zip",
+      "size": 4341236,
+      "size_mb": 4.1,
+      "last_modified": "Sun, 13 Sep 2026 03:45:03 GMT",
+      "md5": "bd99528892bc0ab069a3c0ea46393791",
+      "official_site": "https://www.x-ways.net/winhex/"
+    },
+    {
+      "name": "XYplorer",
+      "name_cn": "XYplorer",
+      "icon": "X",
+      "icon_color": "linear-gradient(135deg, #00acc1, #1e88e5)",
+      "category": "办公效率",
+      "version": "28.30.2500",
+      "download_url": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip",
+      "download_url_with_params": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip",
+      "size": 14496843,
+      "size_mb": 13.8,
+      "last_modified": "Sun, 13 Sep 2026 18:56:32 GMT",
+      "md5": "8f6bf2be3b20314dc4ce24f2616ea42c",
+      "official_site": "https://www.xyplorer.com/"
     }
   ]
 }
