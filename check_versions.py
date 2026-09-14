@@ -168,6 +168,128 @@ PRODUCTS = [
         'download_url': 'https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip',
         'official_site': 'https://www.xyplorer.com/',
     },
+    {
+        'name': 'Microsoft Edge',
+        'name_cn': 'Microsoft Edge',
+        'icon': 'E',
+        'icon_color': 'linear-gradient(135deg, #0078d4, #00bcf2)',
+        'category': '浏览器',
+        'detect_type': 'scrape',
+        'check_url': 'https://raw.githubusercontent.com/Bush2021/edge_installer/main/readme.md',
+        'version_regex': r'\*\*x64\*\*\s*\|\s*`(\d+\.\d+\.\d+\.\d+)',
+        'download_url_regex': r'\*\*x64\*\*.*?\]\((https://[^)]+)\)',
+        'version': '153.0.4234.32',
+        'download_url': 'https://github.com/Bush2021/edge_installer/releases',
+        'official_site': 'https://github.com/Bush2021/edge_installer',
+    },
+    {
+        'name': 'Google Chrome',
+        'name_cn': 'Google Chrome',
+        'icon': 'C',
+        'icon_color': 'linear-gradient(135deg, #4285f4, #34a853)',
+        'category': '浏览器',
+        'detect_type': 'scrape',
+        'check_url': 'https://raw.githubusercontent.com/Bush2021/chrome_installer/main/readme.md',
+        'version_regex': r'\*\*x64\*\*\s*\|\s*`(\d+\.\d+\.\d+\.\d+)',
+        'download_url_regex': r'\*\*x64\*\*.*?\]\((https://[^)]+)\)',
+        'version': '153.0.8010.37',
+        'download_url': 'https://github.com/Bush2021/chrome_installer/releases',
+        'official_site': 'https://github.com/Bush2021/chrome_installer',
+    },
+    {
+        'name': 'NetEase Cloud Music',
+        'name_cn': '网易云音乐',
+        'icon': '网',
+        'icon_color': 'linear-gradient(135deg, #e60026, #ff4d4f)',
+        'category': '影音娱乐',
+        'detect_type': 'fixed',
+        'version': '3.1.34.205281',
+        'download_url': 'https://music.163.com/#/download',
+        'official_site': 'https://music.163.com/#/download',
+    },
+    {
+        'name': '360 Safe Browser 16',
+        'name_cn': '360安全浏览器16',
+        'icon': '360',
+        'icon_color': 'linear-gradient(135deg, #00b42a, #00d68f)',
+        'category': '浏览器',
+        'detect_type': 'increment',
+        'base_version': '16.3.1053',
+        'url_pattern': 'https://sedl.360tpcdn.com/se/360se{ver}.64.exe',
+        'param_format': '',
+        'channel': '',
+        'official_site': 'https://browser.360.cn/',
+    },
+    {
+        'name': '360 Safe Browser 17',
+        'name_cn': '360安全浏览器17',
+        'icon': '360',
+        'icon_color': 'linear-gradient(135deg, #00b42a, #00d68f)',
+        'category': '浏览器',
+        'detect_type': 'increment',
+        'base_version': '17.1.1036',
+        'url_pattern': 'https://sedl.360tpcdn.com/se/360se{ver}.64.exe',
+        'param_format': '',
+        'channel': '',
+        'official_site': 'https://bbs.360.cn/thread-16184433-1-1.html',
+    },
+    {
+        'name': '360 Extreme Browser',
+        'name_cn': '360极速浏览器',
+        'icon': '360',
+        'icon_color': 'linear-gradient(135deg, #165dff, #4080ff)',
+        'category': '浏览器',
+        'detect_type': 'increment',
+        'base_version': '23.1.1253',
+        'url_pattern': 'https://sedl.360tpcdn.com/cse/360csex_{ver}.64.exe',
+        'param_format': '',
+        'channel': '',
+        'official_site': 'https://chromex.360.cn/',
+    },
+    {
+        'name': 'Topaz Photo',
+        'name_cn': 'Topaz Photo',
+        'icon': 'P',
+        'icon_color': 'linear-gradient(135deg, #ff6b35, #f7931e)',
+        'category': '图像处理',
+        'detect_type': 'fixed',
+        'version': '1.7.0',
+        'download_url': 'https://downloads.topazlabs.com/deploy/TopazPhoto/1.7.0/TopazPhoto-1.7.0.msi',
+        'official_site': 'https://community.topazlabs.com/c/topaz-photo/topaz-photo-releases/117',
+    },
+    {
+        'name': 'Topaz Gigapixel',
+        'name_cn': 'Topaz Gigapixel',
+        'icon': 'G',
+        'icon_color': 'linear-gradient(135deg, #7b2ff7, #a855f7)',
+        'category': '图像处理',
+        'detect_type': 'fixed',
+        'version': '1.3.6',
+        'download_url': 'https://downloads.topazlabs.com/deploy/TopazGigapixel/1.3.6/TopazGigapixel-1.3.6.msi',
+        'official_site': 'https://community.topazlabs.com/c/topaz-gigapixel/topaz-gigapixel-releases/128',
+    },
+    {
+        'name': 'Topaz Video',
+        'name_cn': 'Topaz Video',
+        'icon': 'V',
+        'icon_color': 'linear-gradient(135deg, #ef4444, #f97316)',
+        'category': '视频处理',
+        'detect_type': 'fixed',
+        'version': '1.7.0',
+        'download_url': 'https://downloads.topazlabs.com/deploy/TopazVideoStudio/1.7.0/TopazVideo-1.7.0.msi',
+        'official_site': 'https://community.topazlabs.com/c/topaz-video/topaz-video-releases/122',
+    },
+    {
+        'name': 'Adobe Flash Player',
+        'name_cn': 'Adobe Flash Player',
+        'icon': 'F',
+        'icon_color': 'linear-gradient(135deg, #f0282f, #ff6b6b)',
+        'category': '运行环境',
+        'detect_type': 'fixed',
+        'version': '见详情页',
+        'download_url': 'https://flash-player-links.pages.dev/',
+        'official_site': 'https://flash-player-links.pages.dev/',
+    },
 ]
 
 MAX_INCREMENT = 30  # 最多递增检测30个版本
@@ -216,7 +338,9 @@ def check_url_follow(url):
             last_modified = resp.headers.get('Last-Modified', '')
             return resp.status == 200, int(size), last_modified
     except urllib.error.HTTPError as e:
-        # 403 等也尝试获取信息
+        # 403 防盗链：文件存在但被拦截，视为可用但大小未知
+        if e.code == 403:
+            return True, 0, ''
         size = e.headers.get('Content-Length', '0') if e.headers else '0'
         return False, int(size) if size.isdigit() else 0, ''
     except Exception:
@@ -309,15 +433,34 @@ def detect_redirect(product):
 def detect_fixed(product):
     """固定地址模式：版本号手动维护，只检测文件可用性"""
     url = product['download_url']
-    exists, size, date = check_url_follow(url)
-    if not exists and size == 0:
-        print(f"  ⚠️ 警告: 固定地址不可用，可能链接已失效")
+    # 网页链接不检测大小
+    is_webpage = url.endswith('/') or '#' in url or '.html' in url or 'pages.dev' in url or 'update-history' in url
+    if is_webpage:
+        size = 0
+        date = ''
+    else:
+        exists, size, date = check_url_follow(url)
+        if not exists and size == 0:
+            print(f"  ⚠️ 警告: 固定地址不可用，可能链接已失效")
     version = product.get('version', '最新版')
     return version, url, url, size, date, ''
 
 
-def get_file_md5(url, max_retries=3):
-    """下载文件并计算MD5，返回md5十六进制字符串。支持重试。"""
+def get_file_md5(url, max_retries=3, max_size_mb=500):
+    """下载文件并计算MD5，返回md5十六进制字符串。支持重试。
+    超过 max_size_mb 的文件跳过MD5计算（避免大文件下载过慢）
+    """
+    # 先 HEAD 请求获取文件大小
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent': UA}, method='HEAD')
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            size = int(resp.headers.get('Content-Length', '0'))
+            if size > max_size_mb * 1024 * 1024:
+                print(f"  文件过大({size/1024/1024:.0f}MB)，跳过MD5计算")
+                return ''
+    except Exception:
+        pass
+
     for attempt in range(max_retries):
         try:
             req = urllib.request.Request(url, headers={'User-Agent': UA})
@@ -342,15 +485,16 @@ def get_file_md5(url, max_retries=3):
 
 
 def detect_scrape(product):
-    """抓取模式：从官网页面抓取版本号和发布日期
+    """抓取模式：从官网页面抓取版本号、发布日期、下载链接
     下载地址为网页时不计算MD5；为文件时计算MD5
     版本号优先使用配置默认值，官网抓取仅作参考
     """
     default_version = product.get('version', '未知')
     scraped_version = None
     scraped_date = None
+    scraped_download_url = None
 
-    # 从官网抓取版本号和发布日期
+    # 从官网抓取版本号、发布日期、下载链接
     try:
         req = urllib.request.Request(product['check_url'], headers={'User-Agent': UA})
         with urllib.request.urlopen(req, timeout=20) as resp:
@@ -363,7 +507,6 @@ def detect_scrape(product):
             if m:
                 groups = [g for g in m.groups() if g]
                 if len(groups) > 1:
-                    # Xshell 格式: 主版本.Build号 → 主版本.0.Build号
                     if 'Build' in regex or 'build' in regex:
                         scraped_version = f"{groups[0]}.0.{groups[1]}"
                     else:
@@ -378,9 +521,16 @@ def detect_scrape(product):
             m = re.search(date_regex, html, re.I)
             if m:
                 scraped_date = m.group(1)
-                # 统一日期格式为 YYYY-MM-DD
                 scraped_date = scraped_date.replace('/', '-').replace('年', '-').replace('月', '-').replace('日', '')
                 print(f"  发布日期: {scraped_date}")
+
+        # 抓取下载链接
+        dl_regex = product.get('download_url_regex')
+        if dl_regex:
+            m = re.search(dl_regex, html, re.I)
+            if m:
+                scraped_download_url = m.group(1)
+                print(f"  抓取下载链接: {scraped_download_url[:80]}...")
     except Exception as e:
         print(f"  ⚠️ 官网抓取失败: {e}")
 
@@ -394,29 +544,27 @@ def detect_scrape(product):
     else:
         version = default_version
 
+    # 下载链接：优先使用抓取到的，其次用配置的
+    url = scraped_download_url or product['download_url']
+
     # 获取文件信息（仅当下载地址是文件时）
-    url = product['download_url']
-    is_webpage = url.endswith('.html') or url.endswith('/') or 'download.html' in url or 'update-history' in url
+    is_webpage = url.endswith('.html') or url.endswith('/') or 'download.html' in url or 'update-history' in url or 'pages.dev' in url
     size = 0
     date = ''
     md5 = ''
 
     if is_webpage:
-        # 下载地址是网页，使用抓取的发布日期
         date = scraped_date or ''
         print(f"  下载地址为网页，大小不适用")
     else:
-        # 下载地址是文件，获取大小和修改时间
         exists, size, date = check_url_follow(url)
         if not exists and size == 0:
             print(f"  ⚠️ 下载地址不可用")
-        # 计算MD5
         if exists:
             md5 = get_file_md5(url)
             if md5:
                 print(f"  MD5: {md5}")
 
-    # 如果有抓取的发布日期且文件没有 Last-Modified，使用抓取的日期
     if scraped_date and not date:
         date = scraped_date
 
