@@ -79,6 +79,11 @@
   tbody tr:hover {
     background: #1c2128;
   }
+  .col-software { width: 22%; }
+  .col-version { width: 12%; white-space: nowrap; }
+  .col-size { width: 10%; white-space: nowrap; }
+  .col-date { width: 12%; white-space: nowrap; }
+  .col-download { width: 44%; }
   .product-name {
     font-weight: 600;
     color: #e6edf3;
@@ -186,41 +191,37 @@ function render() {
   const content = document.getElementById('content');
   let html = '';
 
-  const categories = {};
-  data.products.forEach(p => {
-    const cat = p.category || '其他';
-    if (!categories[cat]) categories[cat] = [];
-    categories[cat].push(p);
+  // 按更新日期降序排序，最新的在最上方
+  const sorted = [...data.products].sort((a, b) => {
+    const da = a.last_modified ? new Date(a.last_modified).getTime() : 0;
+    const db = b.last_modified ? new Date(b.last_modified).getTime() : 0;
+    return db - da;
   });
 
-  for (const [cat, products] of Object.entries(categories)) {
-    html += '<div class="category-section">';
-    html += '<div class="category-title">' + cat + ' (' + products.length + ')</div>';
-    html += '<table><thead><tr>';
-    html += '<th>软件</th>';
-    html += '<th>最新版本</th>';
-    html += '<th class="hide-mobile">大小</th>';
-    html += '<th class="hide-mobile">发布日期</th>';
-    html += '<th>下载</th>';
-    html += '</tr></thead><tbody>';
+  html += '<table><thead><tr>';
+  html += '<th class="col-software">软件</th>';
+  html += '<th class="col-version">最新版本</th>';
+  html += '<th class="hide-mobile col-size">大小</th>';
+  html += '<th class="hide-mobile col-date">发布日期</th>';
+  html += '<th class="col-download">下载</th>';
+  html += '</tr></thead><tbody>';
 
-    products.forEach(p => {
-      const dateStr = p.last_modified ? new Date(p.last_modified).toLocaleDateString('zh-CN') : '-';
-      const dlUrl = p.download_url_with_params || p.download_url;
-      const siteLink = p.official_site ? '<a href="' + p.official_site + '" class="site-link" target="_blank">' + p.official_site.replace('https://','').replace('/','') + '</a>' : '';
+  sorted.forEach(p => {
+    const dateStr = p.last_modified ? new Date(p.last_modified).toLocaleDateString('zh-CN') : '-';
+    const dlUrl = p.download_url_with_params || p.download_url;
+    const siteLink = p.official_site ? '<a href="' + p.official_site + '" class="site-link" target="_blank">' + p.official_site.replace('https://','').replace('/','') + '</a>' : '';
 
-      html += '<tr>';
-      html += '<td><span class="product-name">' + p.name_cn + '</span><span class="product-name-en">' + p.name + '</span><br>' + siteLink + '</td>';
-      html += '<td><span class="version">v' + p.version + '</span></td>';
-      html += '<td class="size hide-mobile">' + p.size_mb + ' MB</td>';
-      html += '<td class="date hide-mobile">' + dateStr + '</td>';
-      html += '<td><a href="' + dlUrl + '" class="download-btn" target="_blank">下载</a>';
-      html += '<a href="' + dlUrl + '" class="direct-link" target="_blank">' + dlUrl + '</a></td>';
-      html += '</tr>';
-    });
+    html += '<tr>';
+    html += '<td><span class="product-name">' + p.name_cn + '</span><span class="product-name-en">' + p.name + '</span><br>' + siteLink + '</td>';
+    html += '<td><span class="version">v' + p.version + '</span></td>';
+    html += '<td class="size hide-mobile">' + p.size_mb + ' MB</td>';
+    html += '<td class="date hide-mobile">' + dateStr + '</td>';
+    html += '<td><a href="' + dlUrl + '" class="download-btn" target="_blank">下载</a>';
+    html += '<a href="' + dlUrl + '" class="direct-link" target="_blank">' + dlUrl + '</a></td>';
+    html += '</tr>';
+  });
 
-    html += '</tbody></table></div>';
-  }
+  html += '</tbody></table>';
 
   content.innerHTML = html;
   document.getElementById('updatedBadge').textContent = '共 ' + data.products.length + ' 款软件';
