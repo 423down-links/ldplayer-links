@@ -56,6 +56,30 @@ PRODUCTS = [
         'channel': '',
         'official_site': 'https://www.xunlei.com/',
     },
+    {
+        'name': 'WeChat',
+        'name_cn': '微信',
+        'icon': '微',
+        'icon_color': 'linear-gradient(135deg, #07c160, #10ad56)',
+        'category': '社交沟通',
+        'base_version': '4.1.13',
+        'url_pattern': 'https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_{ver}.exe',
+        'param_format': '',
+        'channel': '',
+        'official_site': 'https://pc.weixin.qq.com/',
+    },
+    {
+        'name': 'Sogou Pinyin',
+        'name_cn': '搜狗输入法',
+        'icon': '搜',
+        'icon_color': 'linear-gradient(135deg, #ff6b35, #ff8c42)',
+        'category': '输入法',
+        'base_version': '16.8.0.4914',
+        'url_pattern': 'https://ime.gtimg.com/pc/build/_sogou_pinyin_{ver}_0.exe',
+        'param_format': '',
+        'channel': '',
+        'official_site': 'https://pinyin.sogou.com/windows/',
+    },
 ]
 
 MAX_INCREMENT = 30  # 最多递增检测30个版本
