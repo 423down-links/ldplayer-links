@@ -315,6 +315,36 @@
       "last_modified": "2026-09-08",
       "md5": "",
       "official_site": "https://flash-player-links.pages.dev/"
+    },
+    {
+      "name": "IObit Uninstaller",
+      "name_cn": "IObit Uninstaller",
+      "icon": "I",
+      "icon_color": "linear-gradient(135deg, #ff6b35, #f7931e)",
+      "category": "系统工具",
+      "version": "16.0.0.34",
+      "download_url": "https://cdn.iobit.com/dl/iobituninstaller.exe",
+      "download_url_with_params": "https://cdn.iobit.com/dl/iobituninstaller.exe",
+      "size": 34293336,
+      "size_mb": 32.7,
+      "last_modified": "Mon, 14 Sep 2026 10:08:00 GMT",
+      "md5": "",
+      "official_site": "https://www.iobit.com/en/advanceduninstaller.php"
+    },
+    {
+      "name": "WinSnap",
+      "name_cn": "WinSnap",
+      "icon": "W",
+      "icon_color": "linear-gradient(135deg, #667eea, #764ba2)",
+      "category": "图像工具",
+      "version": "6.3.2",
+      "download_url": "https://www.ntwind.com/files/WinSnap_6.3.2-setup.exe",
+      "download_url_with_params": "https://www.ntwind.com/files/WinSnap_6.3.2-setup.exe",
+      "size": 3884480,
+      "size_mb": 3.7,
+      "last_modified": "2026-09-10",
+      "md5": "",
+      "official_site": "https://www.ntwind.com/blog"
     }
   ]
 }

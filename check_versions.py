@@ -128,7 +128,7 @@ PRODUCTS = [
         'check_url': 'https://www.xshell.com/zh/xshell-update-history/',
         'version_regex': r'Xshell\s*(\d+)\s*Build\s*(\d+)',
         'version': '8.0.0110',
-        'date': '2025-06-15',
+        'date': '2026-09-03',
         'download_url': 'https://www.xshell.com/zh/xshell-update-history/',
         'official_site': 'https://www.xshell.com/zh/xshell-update-history/',
     },
@@ -313,6 +313,31 @@ PRODUCTS = [
         'download_url': 'https://flash-player-links.pages.dev/',
         'official_site': 'https://flash-player-links.pages.dev/',
     },
+    {
+        'name': 'IObit Uninstaller',
+        'name_cn': 'IObit Uninstaller',
+        'icon': 'I',
+        'icon_color': 'linear-gradient(135deg, #ff6b35, #f7931e)',
+        'category': '系统工具',
+        'detect_type': 'fixed',
+        'version': '16.0.0.34',
+        'download_url': 'https://cdn.iobit.com/dl/iobituninstaller.exe',
+        'official_site': 'https://www.iobit.com/en/advanceduninstaller.php',
+    },
+    {
+        'name': 'WinSnap',
+        'name_cn': 'WinSnap',
+        'icon': 'W',
+        'icon_color': 'linear-gradient(135deg, #667eea, #764ba2)',
+        'category': '图像工具',
+        'detect_type': 'increment',
+        'base_version': '6.3.2',
+        'url_pattern': 'https://www.ntwind.com/files/WinSnap_{ver}-setup.exe',
+        'param_format': '',
+        'channel': '',
+        'date': '2026-09-10',
+        'official_site': 'https://www.ntwind.com/blog',
+    },
 ]
 
 MAX_INCREMENT = 30  # 最多递增检测30个版本
@@ -337,6 +362,7 @@ _capture_redirect_opener = urllib.request.build_opener(CaptureRedirect)
 def check_url(url, referer=None):
     """检测URL是否存在，返回 (exists, size, last_modified)
     不跟随重定向：302/301（如CDN跳转404页）视为文件不存在
+    HEAD无Content-Length时用GET探测
     """
     headers = {'User-Agent': UA}
     if referer:
@@ -346,7 +372,24 @@ def check_url(url, referer=None):
         with _no_redirect_opener.open(req, timeout=10) as resp:
             size = resp.headers.get('Content-Length', '0')
             last_modified = resp.headers.get('Last-Modified', '')
-            return resp.status == 200, int(size), last_modified
+            if resp.status == 200 and (not size or int(size) == 0):
+                # HEAD无Content-Length，用GET探测
+                try:
+                    req2 = urllib.request.Request(url, headers=headers)
+                    with _no_redirect_opener.open(req2, timeout=15) as resp2:
+                        size = resp2.headers.get('Content-Length', '0')
+                        if not size or int(size) == 0:
+                            # 分块传输，读取实际大小
+                            total = 0
+                            while True:
+                                chunk = resp2.read(65536)
+                                if not chunk:
+                                    break
+                                total += len(chunk)
+                            size = str(total)
+                except Exception:
+                    pass
+            return resp.status == 200, int(size) if size and size.isdigit() else 0, last_modified
     except urllib.error.HTTPError:
         return False, 0, ''
     except Exception:
@@ -356,6 +399,7 @@ def check_url(url, referer=None):
 def check_url_follow(url, referer=None):
     """检测URL（跟随重定向），返回 (exists, size, last_modified)
     用于fixed模式，因为有些固定地址会302到CDN
+    HEAD无Content-Length时用GET探测
     """
     headers = {'User-Agent': UA}
     if referer:
@@ -365,7 +409,22 @@ def check_url_follow(url, referer=None):
         with urllib.request.urlopen(req, timeout=15) as resp:
             size = resp.headers.get('Content-Length', '0')
             last_modified = resp.headers.get('Last-Modified', '')
-            return resp.status == 200, int(size), last_modified
+            if resp.status == 200 and (not size or int(size) == 0):
+                try:
+                    req2 = urllib.request.Request(url, headers=headers)
+                    with urllib.request.urlopen(req2, timeout=20) as resp2:
+                        size = resp2.headers.get('Content-Length', '0')
+                        if not size or int(size) == 0:
+                            total = 0
+                            while True:
+                                chunk = resp2.read(65536)
+                                if not chunk:
+                                    break
+                                total += len(chunk)
+                            size = str(total)
+                except Exception:
+                    pass
+            return resp.status == 200, int(size) if size and size.isdigit() else 0, last_modified
     except urllib.error.HTTPError as e:
         if e.code == 403:
             return True, 0, ''
