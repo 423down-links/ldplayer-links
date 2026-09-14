@@ -257,8 +257,10 @@ PRODUCTS = [
         'category': '图像处理',
         'detect_type': 'scrape',
         'check_url': 'https://community.topazlabs.com/c/topaz-photo/topaz-photo-releases/117',
-        'version_regex': r'(\d+\.\d+\.\d+)',
-        'date_regex': r'([A-Z][a-z]+ \d+, 20\d{2})',
+        'detail_url_regex': r'https://community\.topazlabs\.com/t/[a-z0-9-]+/[0-9]+',
+        'detail_url_index': 2,
+        'version_regex': r'v(\d+\.\d+\.\d+)',
+        'date_regex': r'article:published_time" content="([^"]+)"',
         'version': '1.7.0',
         'download_url': 'https://downloads.topazlabs.com/deploy/TopazPhoto/1.7.0/TopazPhoto-1.7.0.msi',
         'official_site': 'https://community.topazlabs.com/c/topaz-photo/topaz-photo-releases/117',
@@ -271,8 +273,10 @@ PRODUCTS = [
         'category': '图像处理',
         'detect_type': 'scrape',
         'check_url': 'https://community.topazlabs.com/c/topaz-gigapixel/topaz-gigapixel-releases/128',
-        'version_regex': r'(\d+\.\d+\.\d+)',
-        'date_regex': r'([A-Z][a-z]+ \d+, 20\d{2})',
+        'detail_url_regex': r'https://community\.topazlabs\.com/t/[a-z0-9-]+/[0-9]+',
+        'detail_url_index': 2,
+        'version_regex': r'v(\d+\.\d+\.\d+)',
+        'date_regex': r'article:published_time" content="([^"]+)"',
         'version': '1.3.6',
         'download_url': 'https://downloads.topazlabs.com/deploy/TopazGigapixel/1.3.6/TopazGigapixel-1.3.6.msi',
         'official_site': 'https://community.topazlabs.com/c/topaz-gigapixel/topaz-gigapixel-releases/128',
@@ -285,8 +289,10 @@ PRODUCTS = [
         'category': '视频处理',
         'detect_type': 'scrape',
         'check_url': 'https://community.topazlabs.com/c/topaz-video/topaz-video-releases/122',
-        'version_regex': r'(\d+\.\d+\.\d+)',
-        'date_regex': r'([A-Z][a-z]+ \d+, 20\d{2})',
+        'detail_url_regex': r'https://community\.topazlabs\.com/t/[a-z0-9-]+/[0-9]+',
+        'detail_url_index': 2,
+        'version_regex': r'v(\d+\.\d+\.\d+)',
+        'date_regex': r'article:published_time" content="([^"]+)"',
         'version': '1.7.0',
         'download_url': 'https://downloads.topazlabs.com/deploy/TopazVideoStudio/1.7.0/TopazVideo-1.7.0.msi',
         'official_site': 'https://community.topazlabs.com/c/topaz-video/topaz-video-releases/122',
@@ -382,6 +388,10 @@ def get_redirect_location(url):
 def parse_date(date_str):
     """解析多种日期格式为 YYYY-MM-DD"""
     date_str = date_str.strip()
+    # ISO格式: 2026-08-27T17:23:08+00:00
+    m = re.match(r'(20\d{2}-\d{2}-\d{2})T', date_str)
+    if m:
+        return m.group(1)
     # 英文月份: September 9, 2026
     months = {'january':'01','february':'02','march':'03','april':'04','may':'05','june':'06',
               'july':'07','august':'08','september':'09','october':'10','november':'11','december':'12',
@@ -524,6 +534,7 @@ def get_file_md5(url, max_retries=3, max_size_mb=500):
 
 def detect_scrape(product):
     """抓取模式：从官网页面抓取版本号、发布日期、下载链接
+    支持两步抓取：列表页提取详情页URL → 详情页抓发布日期
     下载地址为网页时不计算MD5；为文件时计算MD5
     版本号优先使用配置默认值，官网抓取仅作参考
     """
@@ -537,6 +548,31 @@ def detect_scrape(product):
         req = urllib.request.Request(product['check_url'], headers={'User-Agent': UA})
         with urllib.request.urlopen(req, timeout=20) as resp:
             html = resp.read().decode('utf-8', errors='ignore')
+
+        # 两步抓取：如果配置了 detail_url_regex，从列表页提取详情页URL并访问
+        detail_url_regex = product.get('detail_url_regex')
+        if detail_url_regex:
+            matches = re.findall(detail_url_regex, html, re.I)
+            # 取第N个匹配（detail_url_index，默认1即第二个，跳过置顶帖）
+            idx = product.get('detail_url_index', 1)
+            if len(matches) > idx:
+                detail_url = matches[idx]
+                print(f"  详情页: {detail_url[:80]}...")
+                try:
+                    req2 = urllib.request.Request(detail_url, headers={'User-Agent': UA})
+                    with urllib.request.urlopen(req2, timeout=20) as resp2:
+                        html = resp2.read().decode('utf-8', errors='ignore')
+                except Exception as e:
+                    print(f"  ⚠️ 详情页访问失败: {e}")
+            elif matches:
+                detail_url = matches[0]
+                print(f"  详情页(第1个): {detail_url[:80]}...")
+                try:
+                    req2 = urllib.request.Request(detail_url, headers={'User-Agent': UA})
+                    with urllib.request.urlopen(req2, timeout=20) as resp2:
+                        html = resp2.read().decode('utf-8', errors='ignore')
+                except Exception as e:
+                    print(f"  ⚠️ 详情页访问失败: {e}")
 
         # 抓取版本号（支持多捕获组，用.连接）
         regex = product.get('version_regex')
@@ -553,16 +589,13 @@ def detect_scrape(product):
                     scraped_version = groups[0]
                 print(f"  官网版本: {scraped_version} (参考)")
 
-        # 抓取发布日期（取所有匹配中最新的一个）
+        # 抓取发布日期
         date_regex = product.get('date_regex')
         if date_regex:
-            matches = re.findall(date_regex, html, re.I)
-            if matches:
-                parsed_dates = [parse_date(d) for d in matches]
-                parsed_dates = [d for d in parsed_dates if re.match(r'20\d{2}-\d{2}-\d{2}', d)]
-                if parsed_dates:
-                    scraped_date = max(parsed_dates)
-                    print(f"  发布日期: {scraped_date}")
+            m = re.search(date_regex, html, re.I)
+            if m:
+                scraped_date = parse_date(m.group(1))
+                print(f"  发布日期: {scraped_date}")
 
         # 抓取下载链接
         dl_regex = product.get('download_url_regex')
