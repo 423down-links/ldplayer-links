@@ -335,7 +335,7 @@ PRODUCTS = [
         'url_pattern': 'https://www.ntwind.com/files/WinSnap_{ver}-setup.exe',
         'param_format': '',
         'channel': '',
-        'date': '2026-09-10',
+        'date': '2026-09-14',
         'official_site': 'https://www.ntwind.com/blog',
     },
 ]
