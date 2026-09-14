@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T08:54:53.810812+00:00",
+  "updated_at": "2026-09-14T08:58:39.329656+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.37",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789375885110&n=ldinst_9.5.37_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789376222436&n=ldinst_9.5.37_ld_407594_ld.exe",
       "size": 601984488,
       "size_mb": 574.1,
       "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.27",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789375886710&n=ldinst_14.0.27_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789376224132&n=ldinst_14.0.27_ld_412570_ld.exe",
       "size": 744133096,
       "size_mb": 709.7,
       "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT",
@@ -193,7 +193,7 @@
       "size": 517833128,
       "size_mb": 493.8,
       "last_modified": "Mon, 07 Sep 2026 20:31:37 GMT",
-      "md5": "8333417d63b9425e59c93b04a7a39f83",
+      "md5": "0e308f2a7540df1fc72508ac66828c8d",
       "official_site": "https://github.com/Bush2021/chrome_installer"
     },
     {
@@ -222,7 +222,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/se/360se16.3.1053.64.exe",
       "size": 179171072,
       "size_mb": 170.9,
-      "last_modified": "Sat, 05 Sep 2026 14:13:14 GMT",
+      "last_modified": "Sat, 05 Sep 2026 14:13:07 GMT",
       "md5": "",
       "official_site": "https://browser.360.cn/"
     },
@@ -252,7 +252,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/cse/360csex_23.1.1253.64.exe",
       "size": 151253128,
       "size_mb": 144.2,
-      "last_modified": "Fri, 03 Jul 2026 09:59:43 GMT",
+      "last_modified": "Fri, 03 Jul 2026 09:59:22 GMT",
       "md5": "",
       "official_site": "https://chromex.360.cn/"
     },
