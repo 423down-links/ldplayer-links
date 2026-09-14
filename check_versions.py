@@ -743,14 +743,65 @@ def find_latest(product):
     }
 
 
+def detect_with_timeout(product, timeout=45):
+    """带超时的检测，超时返回None"""
+    import threading
+    result = [None]
+    def worker():
+        try:
+            result[0] = find_latest(product)
+        except Exception as e:
+            print(f"  ⚠️ 检测异常: {e}")
+            result[0] = None
+    t = threading.Thread(target=worker, daemon=True)
+    t.start()
+    t.join(timeout)
+    if t.is_alive():
+        print(f"  ⚠️ 检测超时({timeout}s)，保留上次数据")
+        return None
+    return result[0]
+
+
 def main():
+    # 读取上次成功数据，用于检测失败时保留
+    old_data = {}
+    try:
+        with open(DATA_JSON, 'r', encoding='utf-8') as f:
+            old = json.load(f)
+            for p in old.get('products', []):
+                old_data[p['name']] = p
+    except Exception:
+        pass
+
     results = []
+    failed = []
     for product in PRODUCTS:
-        print(f"检测 {product['name_cn']} ({product['name']}) [{product.get('detect_type', 'increment')}]...")
-        info = find_latest(product)
-        print(f"  最新版: {info['version']}, 大小: {info['size_mb']} MB")
-        results.append(info)
-        time.sleep(1)
+        name = product['name']
+        print(f"检测 {product['name_cn']} ({name}) [{product.get('detect_type', 'increment')}]...")
+
+        # 带超时检测，最多重试2次
+        info = None
+        for attempt in range(2):
+            info = detect_with_timeout(product, timeout=45)
+            if info and info.get('size_mb', 0) > 0:
+                break
+            if attempt == 0:
+                print(f"  重试第2次...")
+                time.sleep(2)
+
+        if info is None or (info.get('size_mb', 0) == 0 and name in old_data and old_data[name].get('size_mb', 0) > 0):
+            # 检测失败或大小为0，保留上次成功数据
+            if name in old_data:
+                old = old_data[name]
+                info = old.copy()
+                print(f"  ⚠️ 检测异常，保留上次数据: v{old['version']}, {old['size_mb']}MB")
+                failed.append(name)
+            elif info is None:
+                info = find_latest(product)  # 最后兜底
+        if info:
+            print(f"  最新版: {info['version']}, 大小: {info['size_mb']} MB")
+            results.append(info)
+        time.sleep(0.5)
 
     data = {
         'updated_at': datetime.now(timezone.utc).isoformat(),
@@ -763,6 +814,8 @@ def main():
     print(f"\n已保存到 {DATA_JSON}")
     print(f"更新时间: {data['updated_at']}")
     print(f"共 {len(results)} 个产品")
+    if failed:
+        print(f"⚠️ 检测异常保留旧数据: {', '.join(failed)}")
 
 
 if __name__ == '__main__':
