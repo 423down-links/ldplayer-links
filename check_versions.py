@@ -111,7 +111,7 @@ PRODUCTS = [
         'category': '影音娱乐',
         'detect_type': 'fixed',
         'version': '20.8.5.8',
-        'download_url': 'https://dldir.y.qq.com/music/clntupate/QQMusic_YQQWinPCDL.exe?sign=1789369741-kAK2BZDBSR22GpaC-0-0a8fba49feccd64b339dd8c4141410df',
+        'download_url': 'https://y.qq.com/download/download.html',
         'official_site': 'https://y.qq.com/download/download.html',
     },
     {
@@ -121,7 +121,7 @@ PRODUCTS = [
         'icon_color': 'linear-gradient(135deg, #667eea, #764ba2)',
         'category': '开发工具',
         'detect_type': 'fixed',
-        'version': '7.11.2',
+        'version': '8.0.0110',
         'download_url': 'https://www.xshell.com/zh/xshell-update-history/',
         'official_site': 'https://www.xshell.com/zh/xshell-update-history/',
     },
@@ -144,7 +144,8 @@ PRODUCTS = [
         'category': '开发工具',
         'detect_type': 'scrape',
         'check_url': 'https://www.x-ways.net/winhex/',
-        'version_regex': r'WinHex\s*(\d+\.\d+)',
+        'version_regex': r'WinHex\s*(\d+\.\d+(?:\s*SR-\d+)?)',
+        'version': '21.8 SR-6',
         'download_url': 'https://www.x-ways.net/winhex.zip',
         'official_site': 'https://www.x-ways.net/winhex/',
     },
@@ -156,7 +157,8 @@ PRODUCTS = [
         'category': '办公效率',
         'detect_type': 'scrape',
         'check_url': 'https://www.xyplorer.com/',
-        'version_regex': r'version\s*\((\d+\.\d+\.\d+)',
+        'version_regex': r'version\s*\((\d+\.\d+\.\d+\.\d+)',
+        'version': '28.30.2600',
         'download_url': 'https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip',
         'official_site': 'https://www.xyplorer.com/',
     },
@@ -308,27 +310,39 @@ def detect_fixed(product):
     return version, url, url, size, date, ''
 
 
-def get_file_md5(url):
-    """下载文件并计算MD5，返回md5十六进制字符串"""
-    try:
-        req = urllib.request.Request(url, headers={'User-Agent': UA})
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            md5 = hashlib.md5()
-            while True:
-                chunk = resp.read(65536)
-                if not chunk:
-                    break
-                md5.update(chunk)
-            return md5.hexdigest()
-    except Exception as e:
-        print(f"  ⚠️ MD5计算失败: {e}")
-        return ''
+def get_file_md5(url, max_retries=3):
+    """下载文件并计算MD5，返回md5十六进制字符串。支持重试。"""
+    for attempt in range(max_retries):
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': UA})
+            with urllib.request.urlopen(req, timeout=180) as resp:
+                md5 = hashlib.md5()
+                total = 0
+                while True:
+                    chunk = resp.read(65536)
+                    if not chunk:
+                        break
+                    md5.update(chunk)
+                    total += len(chunk)
+                if total > 0:
+                    return md5.hexdigest()
+        except Exception as e:
+            if attempt < max_retries - 1:
+                print(f"  MD5下载重试 ({attempt+1}/{max_retries}): {e}")
+                time.sleep(2)
+            else:
+                print(f"  ⚠️ MD5计算失败: {e}")
+    return ''
 
 
 def detect_scrape(product):
-    """抓取模式：从官网页面抓取版本号，固定下载地址，计算MD5"""
-    # 抓取版本号
-    version = product.get('version', '未知')
+    """抓取模式：固定下载地址，计算MD5，版本号优先使用配置默认值
+    官网页面版本号仅作参考（部分官网更新滞后或无详细版本号）
+    """
+    default_version = product.get('version', '未知')
+
+    # 从官网抓取版本号作为参考
+    scraped_version = None
     try:
         req = urllib.request.Request(product['check_url'], headers={'User-Agent': UA})
         with urllib.request.urlopen(req, timeout=15) as resp:
@@ -336,12 +350,21 @@ def detect_scrape(product):
         regex = product.get('version_regex', r'(\d+\.\d+(?:\.\d+){0,3})')
         m = re.search(regex, html, re.I)
         if m:
-            version = m.group(1)
-            print(f"  抓取到版本号: {version}")
-        else:
-            print(f"  ⚠️ 未从页面匹配到版本号，使用默认: {version}")
+            scraped_version = m.group(1)
+            print(f"  官网版本: {scraped_version} (参考)")
     except Exception as e:
-        print(f"  ⚠️ 版本号抓取失败: {e}")
+        print(f"  ⚠️ 官网抓取失败: {e}")
+
+    # 版本号决策：优先使用配置的默认版本号
+    # 如果官网抓取到版本号且未配置默认值，则使用抓取值
+    if default_version and default_version != '未知':
+        version = default_version
+        if scraped_version and scraped_version not in default_version:
+            print(f"  ⚠️ 官网版本({scraped_version})与配置版本({default_version})不一致，以配置为准")
+    elif scraped_version:
+        version = scraped_version
+    else:
+        version = default_version
 
     # 获取文件信息
     url = product['download_url']
