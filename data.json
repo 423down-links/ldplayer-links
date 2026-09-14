@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T08:25:51.647807+00:00",
+  "updated_at": "2026-09-14T08:31:54.922781+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.37",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789374291136&n=ldinst_9.5.37_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789374446854&n=ldinst_9.5.37_ld_407594_ld.exe",
       "size": 601984488,
       "size_mb": 574.1,
       "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.27",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789374292853&n=ldinst_14.0.27_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789374448563&n=ldinst_14.0.27_ld_412570_ld.exe",
       "size": 744133096,
       "size_mb": 709.7,
       "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT",
@@ -117,7 +117,7 @@
       "download_url_with_params": "https://www.xshell.com/zh/xshell-update-history/",
       "size": 0,
       "size_mb": 0,
-      "last_modified": "2024-09-11",
+      "last_modified": "",
       "md5": "",
       "official_site": "https://www.xshell.com/zh/xshell-update-history/"
     },
@@ -160,10 +160,10 @@
       "version": "28.30.2600",
       "download_url": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip",
       "download_url_with_params": "https://www.xyplorer.com/download/xyplorer64_full_noinstall.zip",
-      "size": 0,
-      "size_mb": 0,
-      "last_modified": "",
-      "md5": "",
+      "size": 14496843,
+      "size_mb": 13.8,
+      "last_modified": "Sun, 13 Sep 2026 18:56:32 GMT",
+      "md5": "fe9967385789ad33353f7f732c7177d7",
       "official_site": "https://www.xyplorer.com/"
     }
   ]

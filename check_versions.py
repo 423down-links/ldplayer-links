@@ -127,7 +127,6 @@ PRODUCTS = [
         'detect_type': 'scrape',
         'check_url': 'https://www.xshell.com/zh/xshell-update-history/',
         'version_regex': r'Xshell\s*(\d+)\s*Build\s*(\d+)',
-        'date_regex': r'(\d{4}[-/]\d{1,2}[-/]\d{1,2})',
         'version': '8.0.0110',
         'download_url': 'https://www.xshell.com/zh/xshell-update-history/',
         'official_site': 'https://www.xshell.com/zh/xshell-update-history/',
