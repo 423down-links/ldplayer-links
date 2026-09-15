@@ -481,11 +481,30 @@ def increment_version(version):
     return '.'.join(parts)
 
 
+def carry_version(version):
+    """进位到上一段：将上一段+1，后面所有段重置为0
+    例如 25.1.13.1636 -> 25.1.14.0
+         4.1.15 -> 4.2.0
+    """
+    parts = version.split('.')
+    if len(parts) < 2:
+        return increment_version(version)
+    # 找到倒数第二段，+1，后面全部置0
+    parts[-2] = str(int(parts[-2]) + 1)
+    for i in range(-1, -len(parts), -1):
+        if i == -2:
+            break
+        parts[i] = '0'
+    return '.'.join(parts)
+
+
 def detect_increment(product):
-    """递增检测模式：多层探测
-    第1层：三段版本号递增检测（如4.1.13 -> 4.1.15），遇到不存在的版本跳过（最多5个）
-    第2层：检测到最新三段版本后，探测是否有四段小版本号（如4.1.15.1, 4.1.15.65）
-    第3层：获取安装包大小、更新日期、MD5（<100MB才计算MD5）
+    """递增检测模式：多级进位探测
+    第1层：递增最后一段（build号），遇到不存在的版本跳过（最多5个）
+    第2层：连续5个404后进位到上一段（如25.1.13.1636 -> 25.1.14.0），重置后段为0
+    第3层：最多进位2次，确保能探测到跨小版本（25.1.15、25.2.0）
+    第4层：检测到最新版本后，探测四段小版本号（NSIS/PE）
+    第5层：获取安装包大小、更新日期、MD5
     """
     current = product['base_version']
     latest = current
@@ -493,19 +512,23 @@ def detect_increment(product):
     latest_date = ''
     referer = product.get('referer')
     MAX_SKIP = 5  # 最多跳过5个不存在的版本
+    MAX_CARRY = 2  # 最多进位2次（防止无限探测）
     MD5_SIZE_LIMIT = 100 * 1024 * 1024  # 超过100MB不计算MD5
 
-    # 第1层：三段版本号递增检测
+    # 检测基础版本是否存在
     url = product['url_pattern'].format(ver=current)
     exists, size, date = check_url(url, referer=referer)
     if exists:
+        latest = current
         latest_size = size
         latest_date = date
     else:
         print(f"  ⚠️ 警告: 基础版本 {current} 不存在，可能已下架或网络异常")
 
+    # 多级进位递增探测
+    carry_count = 0
     skip_count = 0
-    for _ in range(MAX_INCREMENT):
+    for _ in range(MAX_INCREMENT * (MAX_CARRY + 1)):
         next_ver = increment_version(current)
         url = product['url_pattern'].format(ver=next_ver)
         exists, size, date = check_url(url, referer=referer)
@@ -519,7 +542,26 @@ def detect_increment(product):
         else:
             skip_count += 1
             if skip_count >= MAX_SKIP:
-                break
+                # 连续5个404，尝试进位到上一段
+                if carry_count < MAX_CARRY:
+                    carry_ver = carry_version(current)
+                    print(f"  🔄 连续{MAX_SKIP}个404，进位探测: {current} -> {carry_ver}")
+                    current = carry_ver
+                    skip_count = 0
+                    carry_count += 1
+                    # 检测进位后的版本是否存在
+                    url = product['url_pattern'].format(ver=current)
+                    exists, size, date = check_url(url, referer=referer)
+                    if exists:
+                        latest = current
+                        latest_size = size
+                        latest_date = date
+                        print(f"  ✓ 进位版本存在: {current}")
+                    time.sleep(0.3)
+                    continue
+                else:
+                    print(f"  ⏹ 已进位{MAX_CARRY}次，停止探测")
+                    break
             current = next_ver
             time.sleep(0.2)
 
