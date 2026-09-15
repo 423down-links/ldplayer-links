@@ -442,6 +442,7 @@ PRODUCTS = [
         'detect_type': 'github_release',
         'repo': 'zbezj/HEU_KMS_Activator',
         'version_regex': r'v?(\d+\.\d+\.\d+)',
+        'version_source': 'name',
         'version': '64.04.0',
         'date': '2026-07-06',
         'download_url': 'https://github.com/zbezj/HEU_KMS_Activator/releases',
@@ -460,6 +461,20 @@ PRODUCTS = [
         'date': '2026-07-20',
         'download_url': 'https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases',
         'official_site': 'https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases',
+    },
+    {
+        'name': 'Open-Shell',
+        'name_cn': 'Open-Shell Menu',
+        'icon': 'OS',
+        'icon_color': 'linear-gradient(135deg, #0078d4, #00bcf2)',
+        'category': '系统工具',
+        'detect_type': 'github_release',
+        'repo': 'Open-Shell/Open-Shell-Menu',
+        'version_regex': r'v?(\d+\.\d+\.\d+)',
+        'version': '4.4.198',
+        'date': '2026-05-12',
+        'download_url': 'https://github.com/Open-Shell/Open-Shell-Menu/releases',
+        'official_site': 'https://github.com/Open-Shell/Open-Shell-Menu/releases',
     },
 ]
 
@@ -1077,16 +1092,19 @@ def detect_github_release(product):
             return product.get('version', '未知'), product.get('download_url', ''), '', 0, '', ''
 
         tag = latest_release.get('tag_name', '')
+        name = latest_release.get('name', '')
         html_url = latest_release.get('html_url', '')
         published = latest_release.get('published_at', '')
 
-        # 从tag提取版本号
+        # 从tag或name提取版本号（version_source: 'tag'默认, 'name'）
+        version_source = product.get('version_source', 'tag')
+        source_text = name if version_source == 'name' else tag
         version = product.get('version', '未知')
-        m = re.search(version_regex, tag)
+        m = re.search(version_regex, source_text)
         if m:
             version = m.group(1)
         print(f"  Release: {tag[:60]}")
-        print(f"  版本: {version}, 发布: {published[:10]}")
+        print(f"  版本: {version} (from {version_source}), 发布: {published[:10]}")
 
         # 计算所有asset的总大小
         assets = latest_release.get('assets', [])

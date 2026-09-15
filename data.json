@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T20:53:41.862784+00:00",
+  "updated_at": "2026-09-15T21:03:26.999831+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.38",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789505529564&n=ldinst_9.5.38_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789506157788&n=ldinst_9.5.38_ld_407594_ld.exe",
       "size": 602016744,
       "size_mb": 574.1,
       "last_modified": "Tue, 15 Sep 2026 11:21:53 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.28",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789505529861&n=ldinst_14.0.28_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789506158096&n=ldinst_14.0.28_ld_412570_ld.exe",
       "size": 744157152,
       "size_mb": 709.7,
       "last_modified": "Tue, 15 Sep 2026 11:14:53 GMT",
@@ -222,7 +222,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/se/360se16.3.1053.64.exe",
       "size": 179171072,
       "size_mb": 170.9,
-      "last_modified": "Sat, 05 Sep 2026 14:13:07 GMT",
+      "last_modified": "Sat, 05 Sep 2026 14:13:14 GMT",
       "md5": "",
       "official_site": "https://browser.360.cn/"
     },
@@ -237,7 +237,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/se/360se17.1.1036.64.exe",
       "size": 220707072,
       "size_mb": 210.5,
-      "last_modified": "Fri, 11 Sep 2026 13:09:55 GMT",
+      "last_modified": "Fri, 11 Sep 2026 13:10:25 GMT",
       "md5": "",
       "official_site": "https://bbs.360.cn/thread-16184433-1-1.html"
     },
@@ -252,7 +252,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/cse/360csex_23.1.1253.64.exe",
       "size": 151253128,
       "size_mb": 144.2,
-      "last_modified": "Fri, 03 Jul 2026 09:59:22 GMT",
+      "last_modified": "Fri, 03 Jul 2026 09:59:43 GMT",
       "md5": "",
       "official_site": "https://chromex.360.cn/"
     },
@@ -442,7 +442,7 @@
       "icon": "HK",
       "icon_color": "linear-gradient(135deg, #9b59b6, #8e44ad)",
       "category": "系统工具",
-      "version": "64.0.0",
+      "version": "64.04.0",
       "download_url": "https://github.com/zbezj/HEU_KMS_Activator/releases/tag/64.0.0",
       "download_url_with_params": "https://github.com/zbezj/HEU_KMS_Activator/releases/tag/64.0.0",
       "size": 11158361,
@@ -465,6 +465,21 @@
       "last_modified": "2026-07-20",
       "md5": "",
       "official_site": "https://github.com/c0re100/qBittorrent-Enhanced-Edition/releases"
+    },
+    {
+      "name": "Open-Shell",
+      "name_cn": "Open-Shell Menu",
+      "icon": "OS",
+      "icon_color": "linear-gradient(135deg, #0078d4, #00bcf2)",
+      "category": "系统工具",
+      "version": "4.4.198",
+      "download_url": "https://github.com/Open-Shell/Open-Shell-Menu/releases/tag/v4.4.198",
+      "download_url_with_params": "https://github.com/Open-Shell/Open-Shell-Menu/releases/tag/v4.4.198",
+      "size": 38445731,
+      "size_mb": 36.7,
+      "last_modified": "2026-05-13",
+      "md5": "",
+      "official_site": "https://github.com/Open-Shell/Open-Shell-Menu/releases"
     }
   ]
 }
