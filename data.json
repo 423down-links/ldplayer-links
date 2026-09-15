@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T21:18:57.965993+00:00",
+  "updated_at": "2026-09-15T21:27:39.298265+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.38",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789507095549&n=ldinst_9.5.38_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789507614672&n=ldinst_9.5.38_ld_407594_ld.exe",
       "size": 602016744,
       "size_mb": 574.1,
       "last_modified": "Tue, 15 Sep 2026 11:21:53 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.28",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789507095535&n=ldinst_14.0.28_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789507614917&n=ldinst_14.0.28_ld_412570_ld.exe",
       "size": 744157152,
       "size_mb": 709.7,
       "last_modified": "Tue, 15 Sep 2026 11:14:53 GMT",
@@ -222,7 +222,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/se/360se16.3.1053.64.exe",
       "size": 179171072,
       "size_mb": 170.9,
-      "last_modified": "Sat, 05 Sep 2026 14:13:07 GMT",
+      "last_modified": "Sat, 05 Sep 2026 14:13:14 GMT",
       "md5": "",
       "official_site": "https://browser.360.cn/"
     },
@@ -487,7 +487,7 @@
       "icon": "PD",
       "icon_color": "linear-gradient(135deg, #2c3e50, #f39c12)",
       "category": "视频编辑",
-      "version": "24.0",
+      "version": "24.6.1917.0",
       "download_url": "https://build.cyberlink.com/Retail/PowerDirector/CGQC8ZH75VM6/PowerDirector_DirectorSuite365.exe",
       "download_url_with_params": "https://build.cyberlink.com/Retail/PowerDirector/CGQC8ZH75VM6/PowerDirector_DirectorSuite365.exe",
       "size": 724699336,
