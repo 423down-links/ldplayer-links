@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T21:07:16.989539+00:00",
+  "updated_at": "2026-09-15T21:18:57.965993+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.38",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789506398646&n=ldinst_9.5.38_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789507095549&n=ldinst_9.5.38_ld_407594_ld.exe",
       "size": 602016744,
       "size_mb": 574.1,
       "last_modified": "Tue, 15 Sep 2026 11:21:53 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.28",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789506398541&n=ldinst_14.0.28_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789507095535&n=ldinst_14.0.28_ld_412570_ld.exe",
       "size": 744157152,
       "size_mb": 709.7,
       "last_modified": "Tue, 15 Sep 2026 11:14:53 GMT",
@@ -222,7 +222,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/se/360se16.3.1053.64.exe",
       "size": 179171072,
       "size_mb": 170.9,
-      "last_modified": "Sat, 05 Sep 2026 14:13:14 GMT",
+      "last_modified": "Sat, 05 Sep 2026 14:13:07 GMT",
       "md5": "",
       "official_site": "https://browser.360.cn/"
     },
@@ -480,6 +480,36 @@
       "last_modified": "2026-09-15",
       "md5": "",
       "official_site": "https://github.com/Open-Shell/Open-Shell-Menu/releases"
+    },
+    {
+      "name": "PowerDirector",
+      "name_cn": "PowerDirector 365",
+      "icon": "PD",
+      "icon_color": "linear-gradient(135deg, #2c3e50, #f39c12)",
+      "category": "视频编辑",
+      "version": "24.0",
+      "download_url": "https://build.cyberlink.com/Retail/PowerDirector/CGQC8ZH75VM6/PowerDirector_DirectorSuite365.exe",
+      "download_url_with_params": "https://build.cyberlink.com/Retail/PowerDirector/CGQC8ZH75VM6/PowerDirector_DirectorSuite365.exe",
+      "size": 724699336,
+      "size_mb": 691.1,
+      "last_modified": "Mon, 14 Sep 2026 03:47:53 GMT",
+      "md5": "be7750903c07baa523c0ab0328a1b27a",
+      "official_site": "https://www.cyberlink.com/products/powerdirector-video-editing-software/features_en_US.html"
+    },
+    {
+      "name": "PhotoDirector",
+      "name_cn": "PhotoDirector 365",
+      "icon": "PhD",
+      "icon_color": "linear-gradient(135deg, #8e44ad, #3498db)",
+      "category": "图像处理",
+      "version": "18.0.8.0908.0",
+      "download_url": "https://build.cyberlink.com/Retail/PhotoDirector/Y2QIW32JB74CH/PhotoDirector_DirectorSuite365.exe",
+      "download_url_with_params": "https://build.cyberlink.com/Retail/PhotoDirector/Y2QIW32JB74CH/PhotoDirector_DirectorSuite365.exe",
+      "size": 669828616,
+      "size_mb": 638.8,
+      "last_modified": "Tue, 08 Sep 2026 04:59:31 GMT",
+      "md5": "02769dcdca897ea1574c2de844c4d76e",
+      "official_site": "https://www.cyberlink.com/products/photodirector/features_en_US.html"
     }
   ]
 }

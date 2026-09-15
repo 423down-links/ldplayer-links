@@ -477,6 +477,34 @@ PRODUCTS = [
         'download_url': 'https://github.com/Open-Shell/Open-Shell-Menu/releases',
         'official_site': 'https://github.com/Open-Shell/Open-Shell-Menu/releases',
     },
+    {
+        'name': 'PowerDirector',
+        'name_cn': 'PowerDirector 365',
+        'icon': 'PD',
+        'icon_color': 'linear-gradient(135deg, #2c3e50, #f39c12)',
+        'category': '视频编辑',
+        'detect_type': 'fixed',
+        'version': '24.0',
+        'size': 691 * 1024 * 1024,
+        'date': '2026-09-14',
+        'md5': 'be7750903c07baa523c0ab0328a1b27a',
+        'download_url': 'https://build.cyberlink.com/Retail/PowerDirector/CGQC8ZH75VM6/PowerDirector_DirectorSuite365.exe',
+        'official_site': 'https://www.cyberlink.com/products/powerdirector-video-editing-software/features_en_US.html',
+    },
+    {
+        'name': 'PhotoDirector',
+        'name_cn': 'PhotoDirector 365',
+        'icon': 'PhD',
+        'icon_color': 'linear-gradient(135deg, #8e44ad, #3498db)',
+        'category': '图像处理',
+        'detect_type': 'fixed',
+        'version': '18.0.8.0908.0',
+        'size': 639 * 1024 * 1024,
+        'date': '2026-09-08',
+        'md5': '02769dcdca897ea1574c2de844c4d76e',
+        'download_url': 'https://build.cyberlink.com/Retail/PhotoDirector/Y2QIW32JB74CH/PhotoDirector_DirectorSuite365.exe',
+        'official_site': 'https://www.cyberlink.com/products/photodirector/features_en_US.html',
+    },
 ]
 
 MAX_INCREMENT = 30  # 最多递增检测30个版本
@@ -838,19 +866,29 @@ def detect_redirect(product):
 
 
 def detect_fixed(product):
-    """固定地址模式：版本号手动维护，只检测文件可用性"""
+    """固定地址模式：版本号手动维护，只检测文件可用性
+    支持配置 size/date/md5 作为默认值（大文件避免重复检测）
+    """
     url = product['download_url']
     # 网页链接不检测大小
     is_webpage = url.endswith('/') or '#' in url or '.html' in url or 'pages.dev' in url or 'update-history' in url
+    size = product.get('size', 0)
+    date = product.get('date', '')
+    md5 = product.get('md5', '')
     if is_webpage:
         size = 0
         date = ''
     else:
-        exists, size, date = check_url_follow(url)
-        if not exists and size == 0:
-            print(f"  ⚠️ 警告: 固定地址不可用，可能链接已失效")
+        # 检测文件可用性，如果检测到大小则用检测值，否则用配置值
+        exists, detected_size, detected_date = check_url_follow(url)
+        if exists and detected_size > 0:
+            size = detected_size
+            if detected_date:
+                date = detected_date
+        elif not exists:
+            print(f"  ⚠️ 警告: 固定地址不可用，可能链接已失效（使用配置值）")
     version = product.get('version', '最新版')
-    return version, url, url, size, date, ''
+    return version, url, url, size, date, md5
 
 
 def get_pe_version(url, referer=None):
