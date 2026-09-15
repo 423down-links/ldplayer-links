@@ -245,12 +245,33 @@ function formatDate(dateStr) {
   return dateStr.slice(0, 16);
 }
 
+function compareVersion(v1, v2) {
+  // 提取版本号中的数字部分，支持 "21.8 SR-6"、"4.1.15.9"、"8.0.0110" 等格式
+  const extract = (v) => {
+    const nums = String(v).match(/\d+/g);
+    return nums ? nums.map(n => parseInt(n, 10)) : [];
+  };
+  const a = extract(v1);
+  const b = extract(v2);
+  const len = Math.max(a.length, b.length);
+  for (let i = 0; i < len; i++) {
+    const x = a[i] || 0;
+    const y = b[i] || 0;
+    if (x !== y) return x - y;
+  }
+  return 0;
+}
+
 function render() {
   const content = document.getElementById('content');
   let html = '';
 
-  // 按更新日期降序排序，最新的在最上方
+  // 排序：版本号最高优先，版本相同时日期新的优先
   const sorted = [...data.products].sort((a, b) => {
+    // 第一优先级：版本号降序
+    const verCmp = compareVersion(b.version, a.version);
+    if (verCmp !== 0) return verCmp;
+    // 第二优先级：日期降序（版本相同时，日期新的在前）
     const da = a.last_modified ? new Date(a.last_modified).getTime() : 0;
     const db = b.last_modified ? new Date(b.last_modified).getTime() : 0;
     return db - da;
