@@ -286,3 +286,41 @@ GET https://api.github.com/repos/{owner}/{repo}/releases/latest
 
 **最后更新**: 2026.09.15
 **版本**: v2.0（融合架构版）
+
+## v2.1 更新（2026-09-15）
+
+### 新增探测方式
+
+#### 12. GitHub Releases API 探测（github_release）
+- **适用场景**：软件发布在GitHub Releases，多分卷ISO等
+- **配置**：`repo='owner/repo'`, `tag_filter='关键词'`, `version_regex='从tag提取版本号'`
+- **原理**：调用 `https://api.github.com/repos/{repo}/releases`，过滤tag，取最新release
+- **获取信息**：版本号（从tag提取）、发布日期（published_at转北京时间）、总大小（所有assets求和）、下载链接（发布页html_url）
+- **示例**：Windows 11 LTSC 2024 / Windows 10 LTSC 2021（adavak/win_iso_build）
+- **注意**：匿名API限流60次/小时，GitHub Actions环境有token不限流；失败时保留配置默认值
+
+#### 13. 页面抓取+动态URL构造（scrape + url_pattern）
+- **适用场景**：版本号从官网页面抓取，下载URL需根据版本号动态构造
+- **配置**：`detect_type='scrape'`, `check_url='官网下载页'`, `version_regex='抓取版本号'`, `url_pattern='URL模板'`, `url_ver_format='short'`
+- **原理**：先从页面抓取版本号，再用_url_ver()转换为URL格式，构造下载链接
+- **url_ver_format选项**：
+  - `full`：完整版本号（默认），如 8.40.5000
+  - `short`：前两段去掉点，如 8.40 -> 840
+  - `major_minor`：前两段带点，如 8.40
+- **示例**：AIDA64（页面抓8.40.5000 → URL aida64extreme840.zip）
+
+### 新增配置项
+
+| 配置项 | 适用模式 | 说明 |
+|--------|---------|------|
+| `url_ver_format` | increment/scrape | URL版本号格式转换（full/short/major_minor） |
+| `url_pattern` | scrape | 动态构造下载URL的模板 |
+| `skip_md5` | scrape/fixed | 跳过MD5计算（大文件或下载慢时） |
+| `size` | github_release | API失败时的默认大小（字节） |
+| `date` | github_release | API失败时的默认日期 |
+
+### 效率优化记录
+
+- AIDA64原用increment模式需探测8.41~8.45多个版本（超时），改用scrape+动态URL后单次请求完成
+- scrape模式MD5计算添加100MB限制，避免大文件下载超时
+- GitHub API失败时保留配置默认值，不覆盖为空
