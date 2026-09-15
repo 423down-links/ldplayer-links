@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T11:13:27.984465+00:00",
+  "updated_at": "2026-09-15T16:16:04.511609+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -7,12 +7,12 @@
       "icon": "9",
       "icon_color": "linear-gradient(135deg, #ff6b35, #f7931e)",
       "category": "模拟器",
-      "version": "9.5.37",
-      "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789470707883&n=ldinst_9.5.37_ld_407594_ld.exe",
-      "size": 601984488,
+      "version": "9.5.38",
+      "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789488868157&n=ldinst_9.5.38_ld_407594_ld.exe",
+      "size": 602016744,
       "size_mb": 574.1,
-      "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT",
+      "last_modified": "Tue, 15 Sep 2026 11:21:53 GMT",
       "md5": "",
       "official_site": "https://www.ldmnq.com/"
     },
@@ -22,12 +22,12 @@
       "icon": "14",
       "icon_color": "linear-gradient(135deg, #00d4ff, #7b2ff7)",
       "category": "模拟器",
-      "version": "14.0.27",
-      "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789470708390&n=ldinst_14.0.27_ld_412570_ld.exe",
-      "size": 744133096,
+      "version": "14.0.28",
+      "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789488863597&n=ldinst_14.0.28_ld_412570_ld.exe",
+      "size": 744157152,
       "size_mb": 709.7,
-      "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT",
+      "last_modified": "Tue, 15 Sep 2026 11:14:53 GMT",
       "md5": "",
       "official_site": "https://www.ldmnq.com/"
     },
