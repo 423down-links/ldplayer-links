@@ -343,6 +343,54 @@ PRODUCTS = [
         'date': '2026-09-14',
         'official_site': 'https://www.ntwind.com/blog',
     },
+    {
+        'name': 'AIDA64',
+        'name_cn': 'AIDA64 Extreme',
+        'icon': 'A',
+        'icon_color': 'linear-gradient(135deg, #e74c3c, #c0392b)',
+        'category': '系统工具',
+        'detect_type': 'scrape',
+        'check_url': 'https://www.aida64.com/downloads',
+        'version_regex': r'version">(\d+\.\d+\.\d+)',
+        'url_ver_format': 'short',
+        'url_pattern': 'https://download.aida64.com/aida64extreme{ver}.zip',
+        'version': '8.40.5000',
+        'download_url': 'https://download.aida64.com/aida64extreme840.zip',
+        'skip_md5': True,
+        'official_site': 'https://www.aida64.com/downloads',
+    },
+    {
+        'name': 'Win11 LTSC',
+        'name_cn': 'Windows 11 LTSC 2024',
+        'icon': '11',
+        'icon_color': 'linear-gradient(135deg, #0078d4, #00bcf2)',
+        'category': '操作系统',
+        'detect_type': 'github_release',
+        'repo': 'adavak/win_iso_build',
+        'tag_filter': 'Windows_11_LTSC_2024_X64_ZH-CN',
+        'version_regex': r'(\d+\.\d+\.\d+)',
+        'version': '26200.9457',
+        'size': 5754 * 1024 * 1024,
+        'date': '2026-09-14',
+        'download_url': 'https://github.com/adavak/win_iso_build/releases',
+        'official_site': 'https://github.com/adavak/win_iso_build/releases',
+    },
+    {
+        'name': 'Win10 LTSC',
+        'name_cn': 'Windows 10 LTSC 2021',
+        'icon': '10',
+        'icon_color': 'linear-gradient(135deg, #0078d4, #50e6ff)',
+        'category': '操作系统',
+        'detect_type': 'github_release',
+        'repo': 'adavak/win_iso_build',
+        'tag_filter': 'Windows_10_LTSC_2021_X64_ZH-CN',
+        'version_regex': r'(\d+\.\d+\.\d+)',
+        'version': '19044.7727',
+        'size': 4845 * 1024 * 1024,
+        'date': '2026-09-14',
+        'download_url': 'https://github.com/adavak/win_iso_build/releases',
+        'official_site': 'https://github.com/adavak/win_iso_build/releases',
+    },
 ]
 
 MAX_INCREMENT = 30  # 最多递增检测30个版本
@@ -537,6 +585,23 @@ def carry_version(version):
     return '.'.join(parts)
 
 
+def _url_ver(version, product):
+    """将版本号转换为URL需要的格式
+    url_ver_format:
+      - 'full' (默认): 完整版本号，如 8.40.5000
+      - 'short': 前两段去掉点，如 8.40 -> 840
+      - 'major_minor': 前两段带点，如 8.40
+    """
+    fmt = product.get('url_ver_format', 'full')
+    if fmt == 'short':
+        parts = version.split('.')
+        return ''.join(parts[:2])
+    elif fmt == 'major_minor':
+        parts = version.split('.')
+        return '.'.join(parts[:2])
+    return version
+
+
 def detect_increment(product):
     """递增检测模式：多级进位探测
     第1层：递增最后一段（build号），遇到不存在的版本跳过（最多5个）
@@ -555,7 +620,7 @@ def detect_increment(product):
     MD5_SIZE_LIMIT = 100 * 1024 * 1024  # 超过100MB不计算MD5
 
     # 检测基础版本是否存在
-    url = product['url_pattern'].format(ver=current)
+    url = product['url_pattern'].format(ver=_url_ver(current, product))
     exists, size, date = check_url(url, referer=referer)
     if exists:
         latest = current
@@ -569,7 +634,7 @@ def detect_increment(product):
     skip_count = 0
     for _ in range(MAX_INCREMENT * (MAX_CARRY + 1)):
         next_ver = increment_version(current)
-        url = product['url_pattern'].format(ver=next_ver)
+        url = product['url_pattern'].format(ver=_url_ver(next_ver, product))
         exists, size, date = check_url(url, referer=referer)
         if exists:
             latest = next_ver
@@ -589,7 +654,7 @@ def detect_increment(product):
                     skip_count = 0
                     carry_count += 1
                     # 检测进位后的版本是否存在
-                    url = product['url_pattern'].format(ver=current)
+                    url = product['url_pattern'].format(ver=_url_ver(current, product))
                     exists, size, date = check_url(url, referer=referer)
                     if exists:
                         latest = current
@@ -612,7 +677,7 @@ def detect_increment(product):
     pe_ver = None
     parts = latest.split('.')
     if len(parts) == 3:
-        full_url_tmp = product['url_pattern'].format(ver=latest)
+        full_url_tmp = product['url_pattern'].format(ver=_url_ver(latest, product))
         # NSIS install.7z内的版本号文件夹（如微信4.1.15.9）- 最精确，优先
         if product.get('nsis_version'):
             print(f"  解析NSIS install版本号...")
@@ -645,7 +710,7 @@ def detect_increment(product):
 
     # 第3层：MD5计算（小于100MB才计算）
     md5 = ''
-    full_url = product['url_pattern'].format(ver=latest)
+    full_url = product['url_pattern'].format(ver=_url_ver(latest, product))
     if latest_size > 0 and latest_size < MD5_SIZE_LIMIT:
         print(f"  计算MD5 ({latest_size/1024/1024:.1f}MB)...")
         md5 = get_file_md5(full_url, referer=referer)
@@ -909,6 +974,78 @@ def get_file_md5(url, max_retries=3, max_size_mb=500, referer=None):
     return ''
 
 
+def detect_github_release(product):
+    """GitHub Releases检测模式：从GitHub API获取最新release的版本号、日期、大小
+    下载链接用发布页URL（html_url），适用于多分卷ISO等场景
+    配置：repo='owner/repo', tag_filter='关键词过滤tag', version_regex='从tag提取版本号'
+    """
+    import json
+    repo = product.get('repo', '')
+    tag_filter = product.get('tag_filter', '')
+    version_regex = product.get('version_regex', r'(\d+\.\d+\.\d+)')
+    if not repo:
+        return product.get('version', '未知'), product.get('download_url', ''), '', 0, '', ''
+
+    try:
+        api_url = f'https://api.github.com/repos/{repo}/releases?per_page=30'
+        req = urllib.request.Request(api_url, headers={'User-Agent': UA, 'Accept': 'application/vnd.github.v3+json'})
+        with urllib.request.urlopen(req, timeout=20) as resp:
+            releases = json.loads(resp.read().decode('utf-8'))
+
+        # 过滤tag并找最新的
+        latest_release = None
+        for r in releases:
+            tag = r.get('tag_name', '')
+            if tag_filter and tag_filter not in tag:
+                continue
+            if not r.get('draft', False) and not r.get('prerelease', False):
+                latest_release = r
+                break
+
+        if not latest_release:
+            print(f"  ⚠️ 未找到匹配的release (filter={tag_filter})")
+            return product.get('version', '未知'), product.get('download_url', ''), '', 0, '', ''
+
+        tag = latest_release.get('tag_name', '')
+        html_url = latest_release.get('html_url', '')
+        published = latest_release.get('published_at', '')
+
+        # 从tag提取版本号
+        version = product.get('version', '未知')
+        m = re.search(version_regex, tag)
+        if m:
+            version = m.group(1)
+        print(f"  Release: {tag[:60]}")
+        print(f"  版本: {version}, 发布: {published[:10]}")
+
+        # 计算所有asset的总大小
+        assets = latest_release.get('assets', [])
+        total_size = sum(a.get('size', 0) for a in assets)
+        print(f"  分卷: {len(assets)}个, 总大小: {total_size/1024/1024:.0f}MB")
+
+        # 日期转换
+        date = ''
+        if published:
+            try:
+                from datetime import datetime, timezone, timedelta
+                dt = datetime.fromisoformat(published.replace('Z', '+00:00'))
+                dt = dt.astimezone(timezone(timedelta(hours=8)))
+                date = dt.strftime('%Y-%m-%d')
+            except Exception:
+                date = published[:10]
+
+        return version, html_url, html_url, total_size, date, ''
+
+    except Exception as e:
+        print(f"  ⚠️ GitHub API失败: {e}")
+        # API失败时保留配置的默认值（版本、下载地址、大小、日期）
+        return (product.get('version', '未知'),
+                product.get('download_url', ''),
+                product.get('download_url', ''),
+                product.get('size', 0),
+                product.get('date', ''), '')
+
+
 def detect_scrape(product):
     """抓取模式：从官网页面抓取版本号、发布日期、下载链接
     支持两步抓取：列表页提取详情页URL → 详情页抓发布日期
@@ -995,7 +1132,12 @@ def detect_scrape(product):
         version = default_version
 
     # 下载链接：优先使用抓取到的，其次用配置的
-    url = scraped_download_url or product['download_url']
+    # 如果配置了url_pattern，根据版本号动态构造URL（如AIDA64）
+    if product.get('url_pattern'):
+        url = product['url_pattern'].format(ver=_url_ver(version, product))
+        print(f"  动态构造URL: {url}")
+    else:
+        url = scraped_download_url or product['download_url']
 
     # 获取文件信息（仅当下载地址是文件时）
     is_webpage = url.endswith('.html') or url.endswith('/') or 'download.html' in url or 'update-history' in url or 'pages.dev' in url
@@ -1011,9 +1153,13 @@ def detect_scrape(product):
         if not exists and size == 0:
             print(f"  ⚠️ 下载地址不可用")
         if exists:
-            md5 = get_file_md5(url)
-            if md5:
-                print(f"  MD5: {md5}")
+            # MD5计算：小于100MB且未配置skip_md5才计算
+            if not product.get('skip_md5') and size > 0 and size < 100 * 1024 * 1024:
+                md5 = get_file_md5(url)
+                if md5:
+                    print(f"  MD5: {md5}")
+            else:
+                print(f"  跳过MD5计算 (skip_md5={product.get('skip_md5', False)}, size={size/1024/1024:.0f}MB)")
 
     if scraped_date and not date:
         date = scraped_date
@@ -1043,6 +1189,8 @@ def find_latest(product):
         version, full_url, param_url, size, date, md5 = detect_fixed(product)
     elif detect_type == 'scrape':
         version, full_url, param_url, size, date, md5 = detect_scrape(product)
+    elif detect_type == 'github_release':
+        version, full_url, param_url, size, date, md5 = detect_github_release(product)
     else:
         version, full_url, param_url, size, date, md5 = detect_increment(product)
 

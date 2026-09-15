@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T16:16:04.511609+00:00",
+  "updated_at": "2026-09-15T16:23:33.776236+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.38",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789488868157&n=ldinst_9.5.38_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789489298165&n=ldinst_9.5.38_ld_407594_ld.exe",
       "size": 602016744,
       "size_mb": 574.1,
       "last_modified": "Tue, 15 Sep 2026 11:21:53 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.28",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789488863597&n=ldinst_14.0.28_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789489298967&n=ldinst_14.0.28_ld_412570_ld.exe",
       "size": 744157152,
       "size_mb": 709.7,
       "last_modified": "Tue, 15 Sep 2026 11:14:53 GMT",
@@ -178,7 +178,7 @@
       "size": 206472016,
       "size_mb": 196.9,
       "last_modified": "Thu, 10 Sep 2026 23:09:27 GMT",
-      "md5": "eac57c32c78f001af671c148aa22d1df",
+      "md5": "",
       "official_site": "https://github.com/Bush2021/edge_installer"
     },
     {
@@ -193,7 +193,7 @@
       "size": 517833128,
       "size_mb": 493.8,
       "last_modified": "Mon, 07 Sep 2026 20:31:37 GMT",
-      "md5": "0e308f2a7540df1fc72508ac66828c8d",
+      "md5": "",
       "official_site": "https://github.com/Bush2021/chrome_installer"
     },
     {
@@ -222,7 +222,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/se/360se16.3.1053.64.exe",
       "size": 179171072,
       "size_mb": 170.9,
-      "last_modified": "Sat, 05 Sep 2026 14:13:14 GMT",
+      "last_modified": "Sat, 05 Sep 2026 14:13:07 GMT",
       "md5": "",
       "official_site": "https://browser.360.cn/"
     },
@@ -252,7 +252,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/cse/360csex_23.1.1253.64.exe",
       "size": 151253128,
       "size_mb": 144.2,
-      "last_modified": "Fri, 03 Jul 2026 09:59:43 GMT",
+      "last_modified": "Fri, 03 Jul 2026 09:59:22 GMT",
       "md5": "",
       "official_site": "https://chromex.360.cn/"
     },
@@ -345,6 +345,51 @@
       "last_modified": "2026-09-14",
       "md5": "4cf531fc19a2ee1ba2eca1645e577441",
       "official_site": "https://www.ntwind.com/blog"
+    },
+    {
+      "name": "AIDA64",
+      "name_cn": "AIDA64 Extreme",
+      "icon": "A",
+      "icon_color": "linear-gradient(135deg, #e74c3c, #c0392b)",
+      "category": "系统工具",
+      "version": "8.40.5000",
+      "download_url": "https://download.aida64.com/aida64extreme840.zip",
+      "download_url_with_params": "https://download.aida64.com/aida64extreme840.zip",
+      "size": 65129380,
+      "size_mb": 62.1,
+      "last_modified": "Tue, 15 Sep 2026 12:50:25 GMT",
+      "md5": "",
+      "official_site": "https://www.aida64.com/downloads"
+    },
+    {
+      "name": "Win11 LTSC",
+      "name_cn": "Windows 11 LTSC 2024",
+      "icon": "11",
+      "icon_color": "linear-gradient(135deg, #0078d4, #00bcf2)",
+      "category": "操作系统",
+      "version": "26200.9457",
+      "download_url": "https://github.com/adavak/win_iso_build/releases",
+      "download_url_with_params": "https://github.com/adavak/win_iso_build/releases",
+      "size": 6033506304,
+      "size_mb": 5754.0,
+      "last_modified": "2026-09-14",
+      "md5": "",
+      "official_site": "https://github.com/adavak/win_iso_build/releases"
+    },
+    {
+      "name": "Win10 LTSC",
+      "name_cn": "Windows 10 LTSC 2021",
+      "icon": "10",
+      "icon_color": "linear-gradient(135deg, #0078d4, #50e6ff)",
+      "category": "操作系统",
+      "version": "19044.7727",
+      "download_url": "https://github.com/adavak/win_iso_build/releases",
+      "download_url_with_params": "https://github.com/adavak/win_iso_build/releases",
+      "size": 5080350720,
+      "size_mb": 4845.0,
+      "last_modified": "2026-09-14",
+      "md5": "",
+      "official_site": "https://github.com/adavak/win_iso_build/releases"
     }
   ]
 }
