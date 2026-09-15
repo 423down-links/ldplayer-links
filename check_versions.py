@@ -477,12 +477,16 @@ def increment_version(version):
 
 
 def detect_increment(product):
-    """递增检测模式：从 base_version 开始递增检测"""
+    """递增检测模式：从 base_version 开始递增检测
+    遇到不存在的版本时跳过，继续检测后面的版本（最多跳过5个），
+    处理版本号不连续的情况（如微信跳过4.1.14直接发布4.1.15）
+    """
     current = product['base_version']
     latest = current
     latest_size = 0
     latest_date = ''
     referer = product.get('referer')
+    MAX_SKIP = 5  # 最多跳过5个不存在的版本
 
     # 先确认 base_version 存在
     url = product['url_pattern'].format(ver=current)
@@ -493,7 +497,8 @@ def detect_increment(product):
     else:
         print(f"  ⚠️ 警告: 基础版本 {current} 不存在，可能已下架或网络异常")
 
-    # 递增检测
+    # 递增检测（遇到不存在的版本跳过，最多跳过5个）
+    skip_count = 0
     for _ in range(MAX_INCREMENT):
         next_ver = increment_version(current)
         url = product['url_pattern'].format(ver=next_ver)
@@ -503,9 +508,14 @@ def detect_increment(product):
             latest_size = size
             latest_date = date
             current = next_ver
+            skip_count = 0  # 重置跳过计数
             time.sleep(0.3)
         else:
-            break
+            skip_count += 1
+            if skip_count >= MAX_SKIP:
+                break
+            current = next_ver  # 继续递增，跳过不存在的版本
+            time.sleep(0.2)
 
     # 生成下载链接
     full_url = product['url_pattern'].format(ver=latest)
@@ -723,8 +733,14 @@ def find_latest(product):
     else:
         version, full_url, param_url, size, date, md5 = detect_increment(product)
 
-    # 如果配置了 version_display，使用它作为显示版本号（URL中仍用检测到的版本）
-    display_version = product.get('version_display', version)
+    # 版本号显示逻辑：
+    # - 如果检测到新版本（与base_version不同），使用检测到的版本号
+    # - 如果未检测到新版本，且配置了version_display，使用version_display（更详细的版本号如4.1.13.65）
+    base_ver = product.get('base_version', '')
+    if version != base_ver and base_ver:
+        display_version = version  # 检测到新版本，使用检测到的版本号
+    else:
+        display_version = product.get('version_display', version)
 
     return {
         'name': product['name'],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-14T17:45:59.535857+00:00",
+  "updated_at": "2026-09-15T08:16:38.940971+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.37",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789407680861&n=ldinst_9.5.37_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789459764797&n=ldinst_9.5.37_ld_407594_ld.exe",
       "size": 601984488,
       "size_mb": 574.1,
       "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.27",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789407682077&n=ldinst_14.0.27_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789459768862&n=ldinst_14.0.27_ld_412570_ld.exe",
       "size": 744133096,
       "size_mb": 709.7,
       "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT",
@@ -52,12 +52,12 @@
       "icon": "微",
       "icon_color": "linear-gradient(135deg, #07c160, #10ad56)",
       "category": "社交沟通",
-      "version": "4.1.13.65",
-      "download_url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.1.13.exe",
-      "download_url_with_params": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.1.13.exe",
-      "size": 256020400,
-      "size_mb": 244.2,
-      "last_modified": "Wed, 09 Sep 2026 02:21:00 GMT",
+      "version": "4.1.15",
+      "download_url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.1.15.exe",
+      "download_url_with_params": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.1.15.exe",
+      "size": 256605360,
+      "size_mb": 244.7,
+      "last_modified": "Tue, 15 Sep 2026 03:11:48 GMT",
       "md5": "",
       "official_site": "https://pc.weixin.qq.com/"
     },
@@ -173,8 +173,8 @@
       "icon_color": "linear-gradient(135deg, #0078d4, #00bcf2)",
       "category": "浏览器",
       "version": "153.0.4234.32",
-      "download_url": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/70dfa04a-cf2a-4d36-a271-2a4f8a28d987?P1=1789692312&P2=404&P3=2&P4=TSDnM%2b60dT45w%2bNTqT9YSYU3fEn0ekZCcsPKg3EsZrAw9V1lVudjkOY7%2f0%2ftalwx82SmZBF8JdxcDBPncopcFg%3d%3d",
-      "download_url_with_params": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/70dfa04a-cf2a-4d36-a271-2a4f8a28d987?P1=1789692312&P2=404&P3=2&P4=TSDnM%2b60dT45w%2bNTqT9YSYU3fEn0ekZCcsPKg3EsZrAw9V1lVudjkOY7%2f0%2ftalwx82SmZBF8JdxcDBPncopcFg%3d%3d",
+      "download_url": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/70dfa04a-cf2a-4d36-a271-2a4f8a28d987?P1=1790055595&P2=404&P3=2&P4=TYvXojysFzRMMj0jlVqPF2ee2jF7zlfFHg%2bbDRRkgjFjTSJKGdL73hb%2bdMBda45I8gI%2fTRLFLcVgOnpPQWczwA%3d%3d",
+      "download_url_with_params": "https://msedge.sb.tlu.dl.delivery.mp.microsoft.com/filestreamingservice/files/70dfa04a-cf2a-4d36-a271-2a4f8a28d987?P1=1790055595&P2=404&P3=2&P4=TYvXojysFzRMMj0jlVqPF2ee2jF7zlfFHg%2bbDRRkgjFjTSJKGdL73hb%2bdMBda45I8gI%2fTRLFLcVgOnpPQWczwA%3d%3d",
       "size": 206472016,
       "size_mb": 196.9,
       "last_modified": "Thu, 10 Sep 2026 23:09:27 GMT",
@@ -342,7 +342,7 @@
       "download_url_with_params": "https://www.ntwind.com/files/WinSnap_6.3.2-setup.exe",
       "size": 3884480,
       "size_mb": 3.7,
-      "last_modified": "2026-09-14",
+      "last_modified": "",
       "md5": "",
       "official_site": "https://www.ntwind.com/blog"
     }
