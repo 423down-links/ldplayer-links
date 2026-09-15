@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T21:03:26.999831+00:00",
+  "updated_at": "2026-09-15T21:07:16.989539+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.38",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789506157788&n=ldinst_9.5.38_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.38.exe?v=1789506398646&n=ldinst_9.5.38_ld_407594_ld.exe",
       "size": 602016744,
       "size_mb": 574.1,
       "last_modified": "Tue, 15 Sep 2026 11:21:53 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.28",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789506158096&n=ldinst_14.0.28_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.28.exe?v=1789506398541&n=ldinst_14.0.28_ld_412570_ld.exe",
       "size": 744157152,
       "size_mb": 709.7,
       "last_modified": "Tue, 15 Sep 2026 11:14:53 GMT",
@@ -237,7 +237,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/se/360se17.1.1036.64.exe",
       "size": 220707072,
       "size_mb": 210.5,
-      "last_modified": "Fri, 11 Sep 2026 13:10:25 GMT",
+      "last_modified": "Fri, 11 Sep 2026 13:09:55 GMT",
       "md5": "",
       "official_site": "https://bbs.360.cn/thread-16184433-1-1.html"
     },
@@ -252,7 +252,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/cse/360csex_23.1.1253.64.exe",
       "size": 151253128,
       "size_mb": 144.2,
-      "last_modified": "Fri, 03 Jul 2026 09:59:43 GMT",
+      "last_modified": "Fri, 03 Jul 2026 09:59:22 GMT",
       "md5": "",
       "official_site": "https://chromex.360.cn/"
     },
@@ -472,12 +472,12 @@
       "icon": "OS",
       "icon_color": "linear-gradient(135deg, #0078d4, #00bcf2)",
       "category": "系统工具",
-      "version": "4.4.198",
-      "download_url": "https://github.com/Open-Shell/Open-Shell-Menu/releases/tag/v4.4.198",
-      "download_url_with_params": "https://github.com/Open-Shell/Open-Shell-Menu/releases/tag/v4.4.198",
-      "size": 38445731,
-      "size_mb": 36.7,
-      "last_modified": "2026-05-13",
+      "version": "4.4.201",
+      "download_url": "https://github.com/Open-Shell/Open-Shell-Menu/releases/tag/v4.4.201",
+      "download_url_with_params": "https://github.com/Open-Shell/Open-Shell-Menu/releases/tag/v4.4.201",
+      "size": 39980815,
+      "size_mb": 38.1,
+      "last_modified": "2026-09-15",
       "md5": "",
       "official_site": "https://github.com/Open-Shell/Open-Shell-Menu/releases"
     }

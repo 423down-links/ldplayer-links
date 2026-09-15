@@ -471,8 +471,9 @@ PRODUCTS = [
         'detect_type': 'github_release',
         'repo': 'Open-Shell/Open-Shell-Menu',
         'version_regex': r'v?(\d+\.\d+\.\d+)',
-        'version': '4.4.198',
-        'date': '2026-05-12',
+        'include_prerelease': True,
+        'version': '4.4.201',
+        'date': '2026-09-15',
         'download_url': 'https://github.com/Open-Shell/Open-Shell-Menu/releases',
         'official_site': 'https://github.com/Open-Shell/Open-Shell-Menu/releases',
     },
@@ -1078,14 +1079,19 @@ def detect_github_release(product):
             releases = json.loads(resp.read().decode('utf-8'))
 
         # 过滤tag并找最新的
+        # include_prerelease=True时包含预发布版，默认只取稳定版
+        include_pre = product.get('include_prerelease', False)
         latest_release = None
         for r in releases:
             tag = r.get('tag_name', '')
             if tag_filter and tag_filter not in tag:
                 continue
-            if not r.get('draft', False) and not r.get('prerelease', False):
-                latest_release = r
-                break
+            if r.get('draft', False):
+                continue
+            if not include_pre and r.get('prerelease', False):
+                continue
+            latest_release = r
+            break
 
         if not latest_release:
             print(f"  ⚠️ 未找到匹配的release (filter={tag_filter})")
