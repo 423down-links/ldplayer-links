@@ -19,6 +19,9 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Install 7z for NSIS version detection
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full
+
       - name: Check latest versions
         run: python check_versions.py
 

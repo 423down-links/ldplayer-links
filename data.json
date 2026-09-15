@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T08:31:31.602863+00:00",
+  "updated_at": "2026-09-15T09:23:13.433471+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.37",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789460688548&n=ldinst_9.5.37_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789463903819&n=ldinst_9.5.37_ld_407594_ld.exe",
       "size": 601984488,
       "size_mb": 574.1,
       "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.27",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789460692330&n=ldinst_14.0.27_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789463907586&n=ldinst_14.0.27_ld_412570_ld.exe",
       "size": 744133096,
       "size_mb": 709.7,
       "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT",
@@ -52,7 +52,7 @@
       "icon": "微",
       "icon_color": "linear-gradient(135deg, #07c160, #10ad56)",
       "category": "社交沟通",
-      "version": "4.1.15",
+      "version": "4.1.15.9",
       "download_url": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.1.15.exe",
       "download_url_with_params": "https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.1.15.exe",
       "size": 256605360,
@@ -237,7 +237,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/se/360se17.1.1036.64.exe",
       "size": 220707072,
       "size_mb": 210.5,
-      "last_modified": "Fri, 11 Sep 2026 13:10:25 GMT",
+      "last_modified": "Fri, 11 Sep 2026 13:09:55 GMT",
       "md5": "",
       "official_site": "https://bbs.360.cn/thread-16184433-1-1.html"
     },
@@ -343,7 +343,7 @@
       "size": 3884480,
       "size_mb": 3.7,
       "last_modified": "",
-      "md5": "",
+      "md5": "4cf531fc19a2ee1ba2eca1645e577441",
       "official_site": "https://www.ntwind.com/blog"
     }
   ]

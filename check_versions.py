@@ -71,8 +71,9 @@ PRODUCTS = [
         'icon_color': 'linear-gradient(135deg, #07c160, #10ad56)',
         'category': '社交沟通',
         'detect_type': 'increment',
-        'base_version': '4.1.13',
-        'version_display': '4.1.13.65',
+        'base_version': '4.1.15',
+        'nsis_version': True,
+        'pe_version': True,
         'url_pattern': 'https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_{ver}.exe',
         'param_format': '',
         'channel': '',
@@ -99,6 +100,7 @@ PRODUCTS = [
         'category': '社交沟通',
         'detect_type': 'increment',
         'base_version': '9.59.0.0',
+        'pe_version': True,
         'url_pattern': 'https://dl-limit.yystatic.com/4/setup/YYSetup-{ver}-zh-CN.exe',
         'param_format': '',
         'channel': '',
@@ -220,6 +222,7 @@ PRODUCTS = [
         'category': '浏览器',
         'detect_type': 'increment',
         'base_version': '16.3.1053',
+        'pe_version': True,
         'url_pattern': 'https://sedl.360tpcdn.com/se/360se{ver}.64.exe',
         'param_format': '',
         'channel': '',
@@ -233,6 +236,7 @@ PRODUCTS = [
         'category': '浏览器',
         'detect_type': 'increment',
         'base_version': '17.1.1036',
+        'pe_version': True,
         'url_pattern': 'https://sedl.360tpcdn.com/se/360se{ver}.64.exe',
         'param_format': '',
         'channel': '',
@@ -246,6 +250,7 @@ PRODUCTS = [
         'category': '浏览器',
         'detect_type': 'increment',
         'base_version': '23.1.1253',
+        'pe_version': True,
         'url_pattern': 'https://sedl.360tpcdn.com/cse/360csex_{ver}.64.exe',
         'param_format': '',
         'channel': '',
@@ -477,9 +482,10 @@ def increment_version(version):
 
 
 def detect_increment(product):
-    """递增检测模式：从 base_version 开始递增检测
-    遇到不存在的版本时跳过，继续检测后面的版本（最多跳过5个），
-    处理版本号不连续的情况（如微信跳过4.1.14直接发布4.1.15）
+    """递增检测模式：多层探测
+    第1层：三段版本号递增检测（如4.1.13 -> 4.1.15），遇到不存在的版本跳过（最多5个）
+    第2层：检测到最新三段版本后，探测是否有四段小版本号（如4.1.15.1, 4.1.15.65）
+    第3层：获取安装包大小、更新日期、MD5（<100MB才计算MD5）
     """
     current = product['base_version']
     latest = current
@@ -487,8 +493,9 @@ def detect_increment(product):
     latest_date = ''
     referer = product.get('referer')
     MAX_SKIP = 5  # 最多跳过5个不存在的版本
+    MD5_SIZE_LIMIT = 100 * 1024 * 1024  # 超过100MB不计算MD5
 
-    # 先确认 base_version 存在
+    # 第1层：三段版本号递增检测
     url = product['url_pattern'].format(ver=current)
     exists, size, date = check_url(url, referer=referer)
     if exists:
@@ -497,7 +504,6 @@ def detect_increment(product):
     else:
         print(f"  ⚠️ 警告: 基础版本 {current} 不存在，可能已下架或网络异常")
 
-    # 递增检测（遇到不存在的版本跳过，最多跳过5个）
     skip_count = 0
     for _ in range(MAX_INCREMENT):
         next_ver = increment_version(current)
@@ -508,17 +514,46 @@ def detect_increment(product):
             latest_size = size
             latest_date = date
             current = next_ver
-            skip_count = 0  # 重置跳过计数
+            skip_count = 0
             time.sleep(0.3)
         else:
             skip_count += 1
             if skip_count >= MAX_SKIP:
                 break
-            current = next_ver  # 继续递增，跳过不存在的版本
+            current = next_ver
             time.sleep(0.2)
 
-    # 生成下载链接
+    # 第2层：四段版本号探测（NSIS install文件夹 > PE版本 > 手动配置）
+    display_version = latest
+    parts = latest.split('.')
+    if len(parts) == 3:
+        full_url_tmp = product['url_pattern'].format(ver=latest)
+        # 优先：NSIS install.7z内的版本号文件夹（如微信4.1.15.9）
+        if product.get('nsis_version'):
+            print(f"  解析NSIS install版本号...")
+            nsis_ver = get_nsis_install_version(full_url_tmp, referer=referer)
+            if nsis_ver:
+                display_version = nsis_ver
+        # 其次：PE文件版本（如4.1.15.1000）
+        if display_version == latest and product.get('pe_version'):
+            print(f"  解析PE文件版本信息...")
+            pe_ver = get_pe_version(full_url_tmp, referer=referer)
+            if pe_ver:
+                print(f"  PE版本: {pe_ver}")
+                display_version = pe_ver
+
+    # 第3层：MD5计算（小于100MB才计算）
+    md5 = ''
     full_url = product['url_pattern'].format(ver=latest)
+    if latest_size > 0 and latest_size < MD5_SIZE_LIMIT:
+        print(f"  计算MD5 ({latest_size/1024/1024:.1f}MB)...")
+        md5 = get_file_md5(full_url, referer=referer)
+        if md5:
+            print(f"  MD5: {md5}")
+    elif latest_size >= MD5_SIZE_LIMIT:
+        print(f"  文件过大({latest_size/1024/1024:.0f}MB)，跳过MD5计算")
+
+    # 生成下载链接
     if product.get('param_format'):
         timestamp = int(time.time() * 1000)
         param_url = full_url + product['param_format'].format(
@@ -527,7 +562,7 @@ def detect_increment(product):
     else:
         param_url = full_url
 
-    return latest, full_url, param_url, latest_size, latest_date, ''
+    return display_version, full_url, param_url, latest_size, latest_date, md5
 
 
 def detect_redirect(product):
@@ -566,13 +601,177 @@ def detect_fixed(product):
     return version, url, url, size, date, ''
 
 
-def get_file_md5(url, max_retries=3, max_size_mb=500):
+def get_pe_version(url, referer=None):
+    """从PE文件的.rsrc段读取FileVersion（四段版本号），只下载PE头和资源段，不需要下载整个文件。
+    返回版本号字符串，失败返回空字符串。
+    """
+    import struct
+    import re
+    headers = {'User-Agent': UA}
+    if referer:
+        headers['Referer'] = referer
+
+    def download_range(start, end):
+        req = urllib.request.Request(url, headers={**headers, 'Range': f'bytes={start}-{end}'})
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return resp.read()
+
+    try:
+        # 1. 下载PE头（前1KB）
+        head = download_range(0, 1024)
+        pe_offset = struct.unpack_from('<I', head, 0x3C)[0]
+
+        # 2. 下载PE header + section headers
+        pe_data = download_range(pe_offset, pe_offset + 4096)
+        num_sections = struct.unpack_from('<H', pe_data, 6)[0]
+        opt_header_size = struct.unpack_from('<H', pe_data, 20)[0]
+
+        # 3. 找.rsrc段
+        section_offset = 24 + opt_header_size
+        for i in range(num_sections):
+            off = section_offset + i * 40
+            name = pe_data[off:off+8].rstrip(b'\x00').decode('ascii', errors='replace')
+            if name == '.rsrc':
+                raw_offset = struct.unpack_from('<I', pe_data, off+20)[0]
+                raw_size = struct.unpack_from('<I', pe_data, off+16)[0]
+                # 4. 下载.rsrc段（最多2MB）
+                rsrc = download_range(raw_offset, raw_offset + min(raw_size, 2*1024*1024))
+                # 5. 解析版本信息（UTF-16LE编码）
+                text = rsrc.decode('utf-16-le', errors='replace')
+                # 找FileVersion后面的版本号
+                match = re.search(r'FileVersion\s*(\d+\.\d+\.\d+\.\d+)', text)
+                if match:
+                    return match.group(1)
+                # 兜底：找所有四段版本号，取出现最多的
+                versions = re.findall(r'\d+\.\d+\.\d+\.\d+', text)
+                if versions:
+                    from collections import Counter
+                    return Counter(versions).most_common(1)[0][0]
+                break
+    except Exception as e:
+        print(f"  PE版本解析失败: {e}")
+    return ''
+
+
+def get_nsis_install_version(url, referer=None):
+    """从NSIS安装包中提取install.7z内的版本号文件夹名称。
+    高效探测：只下载NSIS头部(2MB)搜索7z签名，再下载install.7z头部(4KB)读取文件列表。
+    返回版本号字符串，失败返回空字符串。
+    """
+    import struct
+    import subprocess
+    import tempfile
+    import os
+
+    headers = {'User-Agent': UA}
+    if referer:
+        headers['Referer'] = referer
+
+    def download_range(start, end):
+        req = urllib.request.Request(url, headers={**headers, 'Range': f'bytes={start}-{end}'})
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return resp.read()
+
+    try:
+        # 1. 下载PE头获取overlay偏移
+        head = download_range(0, 1024)
+        pe_offset = struct.unpack_from('<I', head, 0x3C)[0]
+        pe_data = download_range(pe_offset, pe_offset + 4096)
+        num_sections = struct.unpack_from('<H', pe_data, 6)[0]
+        opt_header_size = struct.unpack_from('<H', pe_data, 20)[0]
+        section_offset = 24 + opt_header_size
+        overlay_offset = 0
+        for i in range(num_sections):
+            off = section_offset + i * 40
+            raw_offset = struct.unpack_from('<I', pe_data, off+20)[0]
+            raw_size = struct.unpack_from('<I', pe_data, off+16)[0]
+            if raw_offset + raw_size > overlay_offset:
+                overlay_offset = raw_offset + raw_size
+
+        # 2. 下载NSIS头部(3MB)，搜索7z签名找到install.7z位置
+        nsis_data = download_range(overlay_offset, overlay_offset + 3*1024*1024)
+        sig = b'\x37\x7a\xbc\xaf\x27\x1c'
+        sig_pos = nsis_data.find(sig)
+        if sig_pos < 0:
+            print(f"  NSIS中未找到7z签名")
+            return ''
+
+        install_7z_offset = overlay_offset + sig_pos
+        print(f"  install.7z偏移: {install_7z_offset}")
+
+        # 3. 从7z签名头部读取精确大小，下载头尾构造完整文件
+        # 7z头部: 6字节签名 + 2字节版本 + 4字节CRC + 8字节next_header_offset + 8字节next_header_size + 4字节CRC
+        sig_head = download_range(install_7z_offset, install_7z_offset + 32)
+        if sig_head[:6] != b'\x37\x7a\xbc\xaf\x27\x1c':
+            print(f"  7z签名不匹配")
+            return ''
+        next_header_offset = struct.unpack_from('<Q', sig_head, 12)[0]
+        next_header_size = struct.unpack_from('<Q', sig_head, 20)[0]
+        install_size = 32 + next_header_offset + next_header_size + 4
+        print(f"  install.7z大小: {install_size}")
+
+        # 下载开头32KB和末尾128KB
+        install_head = download_range(install_7z_offset, install_7z_offset + 32768)
+        install_tail = download_range(install_7z_offset + install_size - 131072, install_7z_offset + install_size - 1)
+
+        # 构造完整大小的稀疏文件
+        with tempfile.NamedTemporaryFile(suffix='.7z', delete=False) as f:
+            f.write(install_head)
+            f.seek(install_size - 131072)
+            f.write(install_tail)
+            f.truncate(install_size)
+            tmp_path = f.name
+
+        # 4. 用7z列出文件，找第一个文件夹名称（版本号）
+        try:
+            # 尝试多个7z可执行文件名
+            seven_zip = None
+            for cmd in ['7z', '7zz', '7za', '/usr/bin/7z', '/usr/local/bin/7z']:
+                try:
+                    subprocess.run([cmd, '--help'], capture_output=True, timeout=5)
+                    seven_zip = cmd
+                    break
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    continue
+            if not seven_zip:
+                print(f"  未找到7z命令，跳过NSIS版本解析")
+                return ''
+            result = subprocess.run(
+                [seven_zip, 'l', tmp_path],
+                capture_output=True, text=True, timeout=30
+            )
+            # 解析输出，找第一个文件夹（D....属性）
+            for line in result.stdout.split('\n'):
+                if ' D.... ' in line or ' D....' in line:
+                    parts = line.split()
+                    for part in parts:
+                        if part and part[0].isdigit() and '.' in part and '/' not in part:
+                            print(f"  NSIS install版本号: {part}")
+                            return part
+            # 兜底：找所有路径中的版本号文件夹
+            import re
+            versions = re.findall(r'(\d+\.\d+\.\d+\.\d+)', result.stdout)
+            if versions:
+                print(f"  NSIS install版本号(兜底): {versions[0]}")
+                return versions[0]
+        finally:
+            os.unlink(tmp_path)
+
+    except Exception as e:
+        print(f"  NSIS版本解析失败: {e}")
+    return ''
+
+
+def get_file_md5(url, max_retries=3, max_size_mb=500, referer=None):
     """下载文件并计算MD5，返回md5十六进制字符串。支持重试。
     超过 max_size_mb 的文件跳过MD5计算（避免大文件下载过慢）
     """
+    headers = {'User-Agent': UA}
+    if referer:
+        headers['Referer'] = referer
     # 先 HEAD 请求获取文件大小
     try:
-        req = urllib.request.Request(url, headers={'User-Agent': UA}, method='HEAD')
+        req = urllib.request.Request(url, headers=headers, method='HEAD')
         with urllib.request.urlopen(req, timeout=15) as resp:
             size = int(resp.headers.get('Content-Length', '0'))
             if size > max_size_mb * 1024 * 1024:
@@ -583,7 +782,7 @@ def get_file_md5(url, max_retries=3, max_size_mb=500):
 
     for attempt in range(max_retries):
         try:
-            req = urllib.request.Request(url, headers={'User-Agent': UA})
+            req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=180) as resp:
                 md5 = hashlib.md5()
                 total = 0
@@ -716,6 +915,14 @@ def detect_scrape(product):
     # 配置的固定日期优先（当抓取不到时）
     if not date and product.get('date'):
         date = product['date']
+
+    # PE版本探测：当下载地址是exe文件且配置了pe_version时
+    if not is_webpage and product.get('pe_version') and url.endswith('.exe'):
+        print(f"  解析PE文件版本信息...")
+        pe_ver = get_pe_version(url)
+        if pe_ver:
+            print(f"  PE版本: {pe_ver}")
+            version = pe_ver
 
     return version, url, url, size, date, md5
 
