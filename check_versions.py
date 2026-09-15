@@ -724,9 +724,14 @@ def get_nsis_install_version(url, referer=None):
 
         # 4. 用7z列出文件，找第一个文件夹名称（版本号）
         try:
-            # 尝试多个7z可执行文件名
+            # 尝试多个7z可执行文件名（包括项目目录）
+            import os
+            script_dir = os.path.dirname(os.path.abspath(__file__))
             seven_zip = None
-            for cmd in ['7z', '7zz', '7za', '/usr/bin/7z', '/usr/local/bin/7z']:
+            for cmd in ['7z', '7zz', '7za',
+                        '/usr/bin/7z', '/usr/local/bin/7z',
+                        os.path.join(script_dir, 'tools', '7zz'),
+                        os.path.join(script_dir, 'tools', '7z')]:
                 try:
                     subprocess.run([cmd, '--help'], capture_output=True, timeout=5)
                     seven_zip = cmd
@@ -986,6 +991,15 @@ def detect_with_timeout(product, timeout=45):
 
 
 def main():
+    import sys
+    import argparse
+
+    parser = argparse.ArgumentParser(description='软件版本检测')
+    parser.add_argument('--only', help='只检测指定软件名称')
+    parser.add_argument('--parallel', type=int, default=4, help='并行检测线程数')
+    parser.add_argument('--no-save', action='store_true', help='不保存到data.json（仅检测）')
+    args = parser.parse_args()
+
     # 读取上次成功数据，用于检测失败时保留
     old_data = {}
     try:
@@ -996,13 +1010,18 @@ def main():
     except Exception:
         pass
 
-    results = []
-    failed = []
-    for product in PRODUCTS:
+    # 筛选要检测的软件
+    products_to_check = PRODUCTS
+    if args.only:
+        products_to_check = [p for p in PRODUCTS if p['name'] == args.only or p['name_cn'] == args.only]
+        if not products_to_check:
+            print(f"未找到软件: {args.only}")
+            sys.exit(1)
+
+    def detect_one(product):
+        """检测单个软件，带超时和重试"""
         name = product['name']
         print(f"检测 {product['name_cn']} ({name}) [{product.get('detect_type', 'increment')}]...")
-
-        # 带超时检测，最多重试2次
         info = None
         for attempt in range(2):
             info = detect_with_timeout(product, timeout=45)
@@ -1011,32 +1030,64 @@ def main():
             if attempt == 0:
                 print(f"  重试第2次...")
                 time.sleep(2)
-
         if info is None or (info.get('size_mb', 0) == 0 and name in old_data and old_data[name].get('size_mb', 0) > 0):
-            # 检测失败或大小为0，保留上次成功数据
             if name in old_data:
                 old = old_data[name]
                 info = old.copy()
                 print(f"  ⚠️ 检测异常，保留上次数据: v{old['version']}, {old['size_mb']}MB")
-                failed.append(name)
             elif info is None:
-                info = find_latest(product)  # 最后兜底
+                info = find_latest(product)
         if info:
             print(f"  最新版: {info['version']}, 大小: {info['size_mb']} MB")
+        return info
+
+    # 并行检测
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    results_dict = {}
+    with ThreadPoolExecutor(max_workers=args.parallel) as executor:
+        future_to_name = {executor.submit(detect_one, p): p['name'] for p in products_to_check}
+        for future in as_completed(future_to_name):
+            name = future_to_name[future]
+            try:
+                results_dict[name] = future.result()
+            except Exception as e:
+                print(f"  ⚠️ {name} 检测异常: {e}")
+                if name in old_data:
+                    results_dict[name] = old_data[name].copy()
+
+    # 按PRODUCTS顺序排序
+    results = []
+    changed = []
+    for p in PRODUCTS:
+        if p['name'] in results_dict:
+            info = results_dict[p['name']]
             results.append(info)
-        time.sleep(0.5)
+            # 检测是否有变化
+            if p['name'] in old_data:
+                old = old_data[p['name']]
+                if old.get('version') != info.get('version') or old.get('size_mb') != info.get('size_mb'):
+                    changed.append(f"{p['name_cn']}: {old.get('version')} -> {info.get('version')}")
 
     data = {
         'updated_at': datetime.now(timezone.utc).isoformat(),
         'products': results,
     }
 
-    with open(DATA_JSON, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    if not args.no_save:
+        with open(DATA_JSON, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
 
     print(f"\n已保存到 {DATA_JSON}")
     print(f"更新时间: {data['updated_at']}")
     print(f"共 {len(results)} 个产品")
+    if changed:
+        print(f"📦 版本变化: {', '.join(changed)}")
+        print("CHANGED=true")
+    else:
+        print("无版本变化")
+        print("CHANGED=false")
+
+    failed = [p['name_cn'] for p in PRODUCTS if p['name'] in results_dict and results_dict[p['name']].get('size_mb', 0) == 0 and p['name'] in old_data and old_data[p['name']].get('size_mb', 0) > 0]
     if failed:
         print(f"⚠️ 检测异常保留旧数据: {', '.join(failed)}")
 

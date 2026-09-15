@@ -1,4 +1,4 @@
-name: Update Software Versions
+name: Update Software Versions (6h full)
 
 on:
   schedule:
@@ -22,8 +22,8 @@ jobs:
       - name: Install 7z for NSIS version detection
         run: sudo apt-get update && sudo apt-get install -y p7zip-full
 
-      - name: Check latest versions
-        run: python check_versions.py
+      - name: Check all versions (parallel, full update)
+        run: python check_versions.py --parallel 6
 
       - name: Embed data into HTML
         run: python embed_data.py
@@ -33,4 +33,4 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update software versions" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update software versions (6h full)" && git push)

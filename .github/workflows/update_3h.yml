@@ -1,0 +1,48 @@
+name: Update Versions (3h high-frequency)
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install 7z for NSIS version detection
+        run: sudo apt-get update && sudo apt-get install -y p7zip-full
+
+      - name: Check all versions (parallel)
+        run: |
+          output=$(python check_versions.py --parallel 6)
+          echo "$output"
+          if echo "$output" | grep -q "CHANGED=true"; then
+            echo "VERSION_CHANGED=true" >> $GITHUB_ENV
+            echo "检测到版本变化，将提交推送"
+          else
+            echo "VERSION_CHANGED=false" >> $GITHUB_ENV
+            echo "无版本变化，跳过提交"
+          fi
+
+      - name: Embed data into HTML
+        if: env.VERSION_CHANGED == 'true'
+        run: python embed_data.py
+
+      - name: Commit and push
+        if: env.VERSION_CHANGED == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Auto-update software versions (3h check)"
+          git push
