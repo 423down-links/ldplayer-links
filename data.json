@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-15T08:16:38.940971+00:00",
+  "updated_at": "2026-09-15T08:31:31.602863+00:00",
   "products": [
     {
       "name": "LDPlayer 9",
@@ -9,7 +9,7 @@
       "category": "模拟器",
       "version": "9.5.37",
       "download_url": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789459764797&n=ldinst_9.5.37_ld_407594_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian9/ldinst_9.5.37.exe?v=1789460688548&n=ldinst_9.5.37_ld_407594_ld.exe",
       "size": 601984488,
       "size_mb": 574.1,
       "last_modified": "Thu, 03 Sep 2026 13:16:42 GMT",
@@ -24,7 +24,7 @@
       "category": "模拟器",
       "version": "14.0.27",
       "download_url": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe",
-      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789459768862&n=ldinst_14.0.27_ld_412570_ld.exe",
+      "download_url_with_params": "https://lddl01.ldmnq.com/download/leidian14/ldinst_14.0.27.exe?v=1789460692330&n=ldinst_14.0.27_ld_412570_ld.exe",
       "size": 744133096,
       "size_mb": 709.7,
       "last_modified": "Thu, 03 Sep 2026 12:55:24 GMT",
@@ -237,7 +237,7 @@
       "download_url_with_params": "https://sedl.360tpcdn.com/se/360se17.1.1036.64.exe",
       "size": 220707072,
       "size_mb": 210.5,
-      "last_modified": "Fri, 11 Sep 2026 13:09:55 GMT",
+      "last_modified": "Fri, 11 Sep 2026 13:10:25 GMT",
       "md5": "",
       "official_site": "https://bbs.360.cn/thread-16184433-1-1.html"
     },
