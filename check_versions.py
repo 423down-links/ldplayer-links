@@ -401,11 +401,37 @@ def check_url(url, referer=None):
         return False, 0, ''
 
 
+def _curl_get_headers(url, referer=None):
+    """用curl获取URL的Content-Length和Last-Modified，返回 (size, last_modified)"""
+    import subprocess
+    try:
+        cmd = ['curl', '-sI', '--max-time', '20', '-A', UA, url]
+        if referer:
+            cmd.extend(['-e', referer])
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=25)
+        output = result.stdout
+        size = 0
+        last_modified = ''
+        for line in output.split('\n'):
+            line = line.strip()
+            if line.lower().startswith('content-length:'):
+                val = line.split(':', 1)[1].strip()
+                if val.isdigit():
+                    size = int(val)
+            elif line.lower().startswith('last-modified:'):
+                last_modified = line.split(':', 1)[1].strip()
+        return size, last_modified
+    except Exception:
+        return 0, ''
+
+
 def check_url_follow(url, referer=None):
     """检测URL（跟随重定向），返回 (exists, size, last_modified)
     用于fixed模式，因为有些固定地址会302到CDN
     HEAD无Content-Length时用GET探测
+    urllib失败时用curl兜底（应对Cloudflare拦截）
     """
+    import subprocess
     headers = {'User-Agent': UA}
     if referer:
         headers['Referer'] = referer
@@ -429,13 +455,26 @@ def check_url_follow(url, referer=None):
                             size = str(total)
                 except Exception:
                     pass
+            # urllib返回200但size=0时，尝试curl兜底
+            if resp.status == 200 and (not size or int(size) == 0):
+                curl_size, curl_date = _curl_get_headers(url, referer)
+                if curl_size > 0:
+                    return True, curl_size, curl_date or last_modified
             return resp.status == 200, int(size) if size and size.isdigit() else 0, last_modified
     except urllib.error.HTTPError as e:
         if e.code == 403:
+            # 403时尝试curl兜底（Cloudflare可能拦截urllib但允许curl）
+            curl_size, curl_date = _curl_get_headers(url, referer)
+            if curl_size > 0:
+                return True, curl_size, curl_date
             return True, 0, ''
         size = e.headers.get('Content-Length', '0') if e.headers else '0'
         return False, int(size) if size.isdigit() else 0, ''
     except Exception:
+        # urllib失败（超时/Cloudflare拦截），用curl兜底
+        curl_size, curl_date = _curl_get_headers(url, referer)
+        if curl_size > 0:
+            return True, curl_size, curl_date
         return False, 0, ''
 
 
@@ -565,24 +604,44 @@ def detect_increment(product):
             current = next_ver
             time.sleep(0.2)
 
-    # 第2层：四段版本号探测（NSIS install文件夹 > PE版本 > 手动配置）
-    display_version = latest
+    # 第2层：多源版本号探测
+    # NSIS版本优先（安装包内部真实版本，最精确）
+    # PE版本与increment版本取最高的作为兜底
+    display_version = latest  # increment探测到的大版本
+    nsis_ver = None
+    pe_ver = None
     parts = latest.split('.')
     if len(parts) == 3:
         full_url_tmp = product['url_pattern'].format(ver=latest)
-        # 优先：NSIS install.7z内的版本号文件夹（如微信4.1.15.9）
+        # NSIS install.7z内的版本号文件夹（如微信4.1.15.9）- 最精确，优先
         if product.get('nsis_version'):
             print(f"  解析NSIS install版本号...")
             nsis_ver = get_nsis_install_version(full_url_tmp, referer=referer)
             if nsis_ver:
-                display_version = nsis_ver
-        # 其次：PE文件版本（如4.1.15.1000）
-        if display_version == latest and product.get('pe_version'):
+                print(f"  NSIS版本: {nsis_ver}")
+        # PE文件版本（如4.1.15.1000）- 安装包本身版本，兜底
+        if product.get('pe_version'):
             print(f"  解析PE文件版本信息...")
             pe_ver = get_pe_version(full_url_tmp, referer=referer)
             if pe_ver:
                 print(f"  PE版本: {pe_ver}")
-                display_version = pe_ver
+
+    # 版本号比较函数
+    def version_key(v):
+        nums = re.findall(r'\d+', str(v))
+        return [int(n) for n in nums] if nums else [0]
+
+    # NSIS版本优先（最精确的真实版本），否则PE与increment取最高
+    if nsis_ver:
+        display_version = nsis_ver
+        print(f"  采用NSIS精确版本: {display_version}")
+    elif pe_ver:
+        # PE版本与increment版本取最高的
+        display_version = max([latest, pe_ver], key=version_key)
+        if display_version != latest:
+            print(f"  PE版本更高，采用: {display_version} (increment={latest})")
+    else:
+        display_version = latest
 
     # 第3层：MD5计算（小于100MB才计算）
     md5 = ''
@@ -995,6 +1054,10 @@ def find_latest(product):
         display_version = version  # 检测到新版本，使用检测到的版本号
     else:
         display_version = product.get('version_display', version)
+
+    # 日期处理：优先使用检测到的日期，为空时用配置的固定日期兜底
+    if not date:
+        date = product.get('date', '')
 
     return {
         'name': product['name'],
